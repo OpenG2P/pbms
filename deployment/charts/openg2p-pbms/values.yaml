@@ -1,6 +1,15 @@
 global:
-  keycloakBaseUrl: https://keycloak2.openg2p.org
-  keycloakIssuerUrl: '{{ tpl .Values.global.keycloakBaseUrl $ }}/realms/master'
+  # Environment segment that all ingress hostnames below are derived from. Leave
+  # EMPTY to auto-pick the install namespace (`.Release.Namespace`) — the usual
+  # case, so it is not asked in the Rancher form. Only set this to override the
+  # hostname segment when it must differ from the Kubernetes namespace.
+  namespace: ""
+
+  # Keycloak is per-namespace (commons layer in this namespace), same as NSR /
+  # g2p-bridge. Staff log in via the 'staff' realm.
+  keycloakBaseUrl: 'https://keycloak.{{ .Values.global.namespace | default .Release.Namespace }}.openg2p.org'
+  keycloakRealm: staff
+  keycloakIssuerUrl: '{{ tpl .Values.global.keycloakBaseUrl $ }}/realms/{{ tpl .Values.global.keycloakRealm $ }}'
 
   postgresqlHost: commons-postgresql
 
@@ -15,7 +24,10 @@ global:
   pbmsBgTaskDBSecret: '{{ .Release.Name }}-bgtask'
   pbmsBgTaskDBUserPasswordKey: '{{ .Release.Name }}-bgtask-db-user'
 
-  # Defaults that should be overridden by questions.yaml
+  # Social Registry (NSR) DB that PBMS reads. Defaults match what openg2p-nsr
+  # provisions when installed with release name 'registry' (its DB/user/secret
+  # are derived from the release name). Override via questions.yaml if NSR was
+  # installed under a different release name.
   registryDB: 'registry'
   registryDBUser: 'registry_user'
   registryDBSecret: 'registry'
@@ -28,7 +40,7 @@ global:
   minioInstallationName: commons-minio
 
   # TODO: Add this to questions.yaml
-  g2pPbmsBgTaskHostname: '{{ .Release.Name }}-bg-task.dev.openg2p.org'
+  g2pPbmsBgTaskHostname: '{{ .Release.Name }}-bg-task.{{ .Values.global.namespace | default .Release.Namespace }}.openg2p.org'
 
   g2pPbmsBgTaskClientId: 'openg2p-pbms-bg-task-{{ tpl .Release.Namespace $ }}'
   g2pPbmsBgTaskClientSecret: ''
@@ -42,8 +54,9 @@ global:
   # Default name of Redis that is installed with this chart
   redisInstallationName: '{{ .Release.Name }}-redis-master'
 
-# TODO: change
-hostname: admin-pbms.dev.openg2p.org
+# Admin (Odoo) ingress hostname. Derived from the install namespace by default;
+# override in the Rancher form or set global.namespace to change the segment.
+hostname: 'admin-pbms.{{ .Values.global.namespace | default .Release.Namespace }}.openg2p.org'
 
 postgres-init:
   enabled: true
@@ -450,7 +463,7 @@ celeryWorkers:
   postgresCheckerInit:
     enabled: true
     image:
-      repository: jbergknoff/postgresql-client
+      repository: openg2p/postgresql-client
       tag: latest
       pullPolicy: IfNotPresent
     command:
@@ -621,7 +634,7 @@ staffPortalApi:
   postgresCheckerInit:
     enabled: true
     image:
-      repository: jbergknoff/postgresql-client
+      repository: openg2p/postgresql-client
       tag: latest
       pullPolicy: IfNotPresent
     command:
@@ -682,9 +695,9 @@ benePortalApi:
     runAsNonRoot: true
 
   envVars:
-    COMMON_AUTH_DEFAULT_ISSUERS: '["https://esignet.dev.openg2p.org"]'
+    COMMON_AUTH_DEFAULT_ISSUERS: '["https://esignet.{{ .Values.global.namespace | default .Release.Namespace }}.openg2p.org"]'
     COMMON_AUTH_DEFAULT_JWKS_URLS: >-
-      ["https://esignet.dev.openg2p.org/v1/esignet/oauth/.well-known/jwks.json"]
+      ["https://esignet.{{ .Values.global.namespace | default .Release.Namespace }}.openg2p.org/v1/esignet/oauth/.well-known/jwks.json"]
     PBMS_BENE_PORTAL_API_OPENAPI_ROOT_PATH: "/"
 
     # PBMS Database
@@ -790,7 +803,7 @@ benePortalApi:
   postgresCheckerInit:
     enabled: true
     image:
-      repository: jbergknoff/postgresql-client
+      repository: openg2p/postgresql-client
       tag: latest
       pullPolicy: IfNotPresent
     command:

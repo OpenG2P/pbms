@@ -8,7 +8,7 @@ metadata:
     {{- include "pbms.labels" . | nindent 4 }}
 spec:
   hosts:
-  - {{ default .Values.hostname .Values.istio.virtualservice.host | quote }}
+  - {{ tpl (default .Values.hostname .Values.istio.virtualservice.host) $ | quote }}
   gateways:
   - {{ default (include "pbms.fullname" .) .Values.istio.virtualservice.gateway }}
   http:
@@ -20,7 +20,7 @@ spec:
   - headers:
       request:
         set:
-          x-forwarded-host: {{ default .Values.hostname .Values.istio.virtualservice.host | quote }}
+          x-forwarded-host: {{ tpl (default .Values.hostname .Values.istio.virtualservice.host) $ | quote }}
           x-forwarded-proto: https
     match:
     - uri:

@@ -10,6 +10,6 @@ from .beneficiary_list_summary_household import (
     BeneficiaryListSummaryHousehold,
     BeneficiaryListSummaryHouseholdPayload,
 )
-from .registry import G2PRegistryPayload
 from .register_household import G2PRegisterHouseholdPayload
+from .registry import G2PRegistryPayload
 from .registry_farmer import G2PFarmerRegistryPayload

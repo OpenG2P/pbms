@@ -346,7 +346,9 @@ class RegistryFarmer(RegistryInterface):
             )
 
             for registrant in registrants_list:
-                registrant_map_from_registry[str(registrant.internal_record_id)] = registrant
+                registrant_map_from_registry[
+                    str(registrant.internal_record_id)
+                ] = registrant
 
         # Collect entitlements per benefit_code_id
         entitlements: dict[int, list[float]] = {}

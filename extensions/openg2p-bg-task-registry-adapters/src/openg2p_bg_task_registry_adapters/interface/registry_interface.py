@@ -1,13 +1,12 @@
 from abc import ABC, abstractmethod
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Dict, List, Tuple
 
+from openg2p_bg_task_models.models import BeneficiaryListDetails
 from openg2p_bg_task_models.schemas import (
     BeneficiarySearchResponsePayload,
     Disbursement,
 )
-from openg2p_fastapi_common.schemas import G2PPaginationRequest
 from openg2p_pbms_models.models import G2PRegistry
-from openg2p_bg_task_models.models import BeneficiaryListDetails
 from sqlalchemy import TextClause, text
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import Session
@@ -26,7 +25,10 @@ class RegistryInterface(ABC):
     # ================
     @abstractmethod
     async def get_summary(
-        self, beneficiary_list_id: str, bg_task_session: AsyncSession, formated: bool = False
+        self,
+        beneficiary_list_id: str,
+        bg_task_session: AsyncSession,
+        formated: bool = False,
     ) -> BeneficiaryListSummaryPayload:
         """
         Abstract method to get async summary statistics for a given beneficiary_list_id.
@@ -53,7 +55,9 @@ class RegistryInterface(ABC):
         """
         Abstract method to compute eligibility summary statistics and update the summary table.
         """
-        raise NotImplementedError("Subclasses must implement compute_eligibility_statistics()")
+        raise NotImplementedError(
+            "Subclasses must implement compute_eligibility_statistics()"
+        )
 
     @abstractmethod
     def compute_entitlement_statistics(
@@ -126,7 +130,9 @@ class RegistryInterface(ABC):
         registrant_ids: List[str],
         bg_task_session: Session,
     ) -> List[Disbursement]:
-        raise NotImplementedError("Subclasses must implement get_bridge_disbursement_details()")
+        raise NotImplementedError(
+            "Subclasses must implement get_bridge_disbursement_details()"
+        )
 
     # ===============================
     # Registry SQL Query Constructors
@@ -225,13 +231,9 @@ class RegistryInterface(ABC):
             raise ValueError("Invalid SQL query: Must be a valid SELECT statement")
 
         if "WHERE" in sql_query.upper():
-            sql_query += (
-                f" AND g2p_register_{target_registry}.internal_record_id = :registrant_id"
-            )
+            sql_query += f" AND g2p_register_{target_registry}.internal_record_id = :registrant_id"
         else:
-            sql_query += (
-                f" WHERE g2p_register_{target_registry}.internal_record_id = :registrant_id"
-            )
+            sql_query += f" WHERE g2p_register_{target_registry}.internal_record_id = :registrant_id"
 
         params = {"registrant_id": registrant_id}
 

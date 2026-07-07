@@ -27,7 +27,9 @@ class G2PRegisterHousehold(G2PRegistry):
     geo_code_hierarchy_json: Mapped[dict] = mapped_column(JSON, nullable=True)
 
     # Household head
-    household_head_internal_record_id: Mapped[str] = mapped_column(String, nullable=True)
+    household_head_internal_record_id: Mapped[str] = mapped_column(
+        String, nullable=True
+    )
     household_head_name: Mapped[str] = mapped_column(String, nullable=True)
     headship_type: Mapped[str] = mapped_column(String, nullable=True)
 

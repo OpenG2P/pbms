@@ -9,7 +9,7 @@ questions:
 - variable: global.postgresqlHost
   description: Hostname to access PostgreSQL
   type: string
-  label: PostgreSQL Host 
+  label: PostgreSQL Host
   group: General Settings
 
 - variable: global.keycloakBaseUrl
@@ -24,41 +24,65 @@ questions:
   label: Email Service Name
   group: General Settings
 
+# Odoo Settings
+- variable: odoo.image.tag
+  description: Image tag (version) for the Odoo (core) image
+  type: string
+  label: Odoo Image Tag
+  group: Odoo Settings
+  show_if: "odoo.enabled=true"
+
+- variable: odoo.odooEmail
+  description: Odoo admin (login) email address
+  type: string
+  label: Odoo Admin Email
+  group: Odoo Settings
+  show_if: "odoo.enabled=true"
+
+- variable: odoo.extraAddonsUrlsToPull
+  description: >-
+    Comma-separated git URLs of extra Odoo addons to pull at container startup,
+    e.g. git://branch//https://github.com/org/repo (optional; leave empty for none).
+  type: string
+  label: Odoo Extra Addons URLs to Pull
+  group: Odoo Settings
+  show_if: "odoo.enabled=true"
+
 # Background Task Settings
-- variable: openg2p-pbms-bg-task-celery-beat-producers.envVars.BG_TASK_CELERY_BEAT_PRODUCER_FREQUENCY
+- variable: beatProducers.envVars.BG_TASK_CELERY_BEAT_PRODUCER_FREQUENCY
   description: Frequency (in seconds) for Celery Beat Producer to run.
   type: int
   label: Celery Beat Producer Frequency
   group: Background Task Settings
-  show_if: "openg2p-pbms-bg-task-celery-beat-producers.enabled=true"
+  show_if: "beatProducers.enabled=true"
 
-- variable: openg2p-pbms-bg-task-celery-beat-producers.envVars.BG_TASK_CELERY_BEAT_BATCH_SIZE
+- variable: beatProducers.envVars.BG_TASK_CELERY_BEAT_BATCH_SIZE
   description: Number of tasks to process in each batch by Celery Beat Producer.
   type: int
   label: Celery Beat Producer Batch Size
   group: Background Task Settings
-  show_if: "openg2p-pbms-bg-task-celery-beat-producers.enabled=true"
+  show_if: "beatProducers.enabled=true"
 
-- variable: openg2p-pbms-bg-task-celery-beat-producers.envVars.BG_TASK_CELERY_BEAT_NO_OF_TASKS_TO_PROCESS
+- variable: beatProducers.envVars.BG_TASK_CELERY_BEAT_NO_OF_TASKS_TO_PROCESS
   description: Number of tasks to process per run by Celery Beat Producer.
   type: int
   label: Celery Beat Producer Number of Tasks to Process
   group: Background Task Settings
-  show_if: "openg2p-pbms-bg-task-celery-beat-producers.enabled=true"
+  show_if: "beatProducers.enabled=true"
 
-- variable: openg2p-pbms-bg-task-celery-workers.envVars.BG_TASK_CELERY_WORKERS_G2P_BRIDGE_BASE_URL
+- variable: celeryWorkers.envVars.BG_TASK_CELERY_WORKERS_G2P_BRIDGE_BASE_URL
   description: Base URL for G2P Bridge API used by Celery Workers.
   type: string
   label: Celery Workers G2P Bridge Base URL
   group: Background Task Settings
-  show_if: "openg2p-pbms-bg-task-celery-workers.enabled=true"
+  show_if: "celeryWorkers.enabled=true"
 
-- variable: openg2p-pbms-bg-task-celery-workers.envVars.BG_TASK_CELERY_WORKERS_BATCH_SIZE
+- variable: celeryWorkers.envVars.BG_TASK_CELERY_WORKERS_BATCH_SIZE
   description: Number of tasks to process in each batch by Celery Workers.
   type: int
   label: Celery Workers Batch Size
   group: Background Task Settings
-  show_if: "openg2p-pbms-bg-task-celery-workers.enabled=true"
+  show_if: "celeryWorkers.enabled=true"
 
 # Portal API Settings
 - variable: staffPortalApi.enabled
@@ -88,14 +112,14 @@ questions:
   show_if: "benePortalApi.enabled=true"
 
 # Registry settings
-- variable: global.registryDB 
-  description: Name of the Registry DB in PostgreSQL 
+- variable: global.registryDB
+  description: Name of the Registry DB in PostgreSQL
   type: string
-  label: Registry DB 
+  label: Registry DB
   group: Registry
 
-- variable: global.registryDBUser 
-  description: Name of the Registry DB User in PostgreSQL 
+- variable: global.registryDBUser
+  description: Name of the Registry DB User in PostgreSQL
   type: string
   label: Registry DB User
   group: Registry
@@ -110,7 +134,7 @@ questions:
   description: Name of the Registry DB Secret key that contains user password
   type: string
   label: Registry DB Secret Key with User Password
-  group: Registry 
+  group: Registry
 
 
 

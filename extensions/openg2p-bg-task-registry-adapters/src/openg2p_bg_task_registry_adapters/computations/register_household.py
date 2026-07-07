@@ -4,8 +4,6 @@ from typing import Any, Dict, List, Optional, Tuple
 import numpy as np
 from fastapi_cache.decorator import cache
 from openg2p_bg_task_models.models import BeneficiaryListDetails
-
-_logger = logging.getLogger("app")
 from openg2p_bg_task_models.schemas import (
     BeneficiarySearchResponsePayload,
     RegistrantDetails,
@@ -27,6 +25,8 @@ from ..schema import (
     BeneficiaryListSummaryHouseholdPayload,
     G2PRegisterHouseholdPayload,
 )
+
+_logger = logging.getLogger("app")
 
 
 class RegisterHousehold(RegistryInterface):
@@ -60,9 +60,7 @@ class RegisterHousehold(RegistryInterface):
         )
         return self._build_summary_payload(summary_row)
 
-    def _build_summary_payload(
-        self, row
-    ) -> BeneficiaryListSummaryHouseholdPayload:
+    def _build_summary_payload(self, row) -> BeneficiaryListSummaryHouseholdPayload:
         def fmt(value, units):
             return f"{value} {units}" if value is not None else None
 
@@ -79,10 +77,18 @@ class RegisterHousehold(RegistryInterface):
                 average_entitlement_per_registrant=row.average_entitlement_per_person,
             ),
             registry_summary=BeneficiaryListSummaryHousehold(
-                size_children_u5_mean=fmt(row.size_children_u5_mean, row.size_children_u5_units),
-                size_children_u5_q1=fmt(row.size_children_u5_q1, row.size_children_u5_units),
-                size_children_u5_q2=fmt(row.size_children_u5_q2, row.size_children_u5_units),
-                size_children_u5_q3=fmt(row.size_children_u5_q3, row.size_children_u5_units),
+                size_children_u5_mean=fmt(
+                    row.size_children_u5_mean, row.size_children_u5_units
+                ),
+                size_children_u5_q1=fmt(
+                    row.size_children_u5_q1, row.size_children_u5_units
+                ),
+                size_children_u5_q2=fmt(
+                    row.size_children_u5_q2, row.size_children_u5_units
+                ),
+                size_children_u5_q3=fmt(
+                    row.size_children_u5_q3, row.size_children_u5_units
+                ),
                 size_elderly_mean=fmt(row.size_elderly_mean, row.size_elderly_units),
                 size_elderly_q1=fmt(row.size_elderly_q1, row.size_elderly_units),
                 size_elderly_q2=fmt(row.size_elderly_q2, row.size_elderly_units),
@@ -129,14 +135,28 @@ class RegisterHousehold(RegistryInterface):
             )
         )
         registrant_details = registrant_details_result.scalars().all()
-        _logger.info("search_beneficiaries: beneficiary_list_id=%r registrant_details row_count=%d", beneficiary_list_id, len(registrant_details))
+        _logger.info(
+            "search_beneficiaries: beneficiary_list_id=%r registrant_details row_count=%d",
+            beneficiary_list_id,
+            len(registrant_details),
+        )
         registrant_ids = []
         for registrant_detail in registrant_details:
             for registrant in registrant_detail:
                 registrant_ids.append(registrant["registrant_id"])
 
-        _logger.info("search_beneficiaries: registrant_ids count=%d ids=%r", len(registrant_ids), registrant_ids)
-        _logger.info("search_beneficiaries: search_query=%r order_by=%r page=%r page_size=%r", search_query, order_by, page, page_size)
+        _logger.info(
+            "search_beneficiaries: registrant_ids count=%d ids=%r",
+            len(registrant_ids),
+            registrant_ids,
+        )
+        _logger.info(
+            "search_beneficiaries: search_query=%r order_by=%r page=%r page_size=%r",
+            search_query,
+            order_by,
+            page,
+            page_size,
+        )
 
         (
             household_search_query,
@@ -149,19 +169,27 @@ class RegisterHousehold(RegistryInterface):
             page_size,
             page,
         )
-        _logger.info("search_beneficiaries: sql=%r params=%r", str(household_search_query), household_search_params)
+        _logger.info(
+            "search_beneficiaries: sql=%r params=%r",
+            str(household_search_query),
+            household_search_params,
+        )
 
         household_search_results = (
             (await sr_session.execute(household_search_query, household_search_params))
             .mappings()
             .all()
         )
-        _logger.info("search_beneficiaries: result_count=%d", len(household_search_results))
+        _logger.info(
+            "search_beneficiaries: result_count=%d", len(household_search_results)
+        )
 
         total_beneficiary_count: int = await self._get_total_beneficiary_count(
             sr_session, beneficiary_list_id, registrant_ids, search_query
         )
-        _logger.info("search_beneficiaries: total_beneficiary_count=%d", total_beneficiary_count)
+        _logger.info(
+            "search_beneficiaries: total_beneficiary_count=%d", total_beneficiary_count
+        )
 
         beneficiaries = []
         if household_search_results:
@@ -209,14 +237,22 @@ class RegisterHousehold(RegistryInterface):
         registrant_ids: List[str],
         search_query: Optional[str] = None,
     ) -> int:
-        _logger.info("_get_total_beneficiary_count: registrant_ids count=%d search_query=%r", len(registrant_ids), search_query)
+        _logger.info(
+            "_get_total_beneficiary_count: registrant_ids count=%d search_query=%r",
+            len(registrant_ids),
+            search_query,
+        )
         (
             beneficiary_count_query,
             beneficiary_count_params,
         ) = self.construct_beneficiary_search_count_sql_query(
             registrant_ids, "households", search_query
         )
-        _logger.info("_get_total_beneficiary_count: count_sql=%r params=%r", str(beneficiary_count_query), beneficiary_count_params)
+        _logger.info(
+            "_get_total_beneficiary_count: count_sql=%r params=%r",
+            str(beneficiary_count_query),
+            beneficiary_count_params,
+        )
         total_beneficiary_count = (
             await sr_session.execute(beneficiary_count_query, beneficiary_count_params)
         ).scalar_one()
@@ -262,7 +298,9 @@ class RegisterHousehold(RegistryInterface):
                 if household.rooms_count is not None:
                     rooms_count.append(household.rooms_count)
                 if household.overcrowding_indicator is not None:
-                    overcrowding_indicator.append(float(household.overcrowding_indicator))
+                    overcrowding_indicator.append(
+                        float(household.overcrowding_indicator)
+                    )
 
         self._apply_quartiles(household_summary, "size_children_u5", size_children_u5)
         self._apply_quartiles(household_summary, "size_elderly", size_elderly)
