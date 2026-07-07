@@ -1,0 +1,1128 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Common",
+    "description": "\n    This is common library for FastAPI service. Override Settings properties to change this.\n\n    ***********************************\n    Further details goes here\n    ***********************************\n    ",
+    "contact": {
+      "url": "https://www.openg2p.org/",
+      "email": "info@openg2p.org"
+    },
+    "license": {
+      "name": "Mozilla Public License 2.0",
+      "url": "https://www.mozilla.org/en-US/MPL/2.0/"
+    },
+    "version": "1.1.6"
+  },
+  "paths": {
+    "/summary": {
+      "post": {
+        "tags": [
+          "PBMS Background Task Summary"
+        ],
+        "summary": "Get Summary",
+        "operationId": "get_summary_summary_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SummaryRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SummaryResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorListResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorListResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorListResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorListResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/disbursement_envelope": {
+      "post": {
+        "tags": [
+          "PBMS Background Task Disbursement"
+        ],
+        "summary": "Disbursement Envelope",
+        "operationId": "disbursement_envelope_disbursement_envelope_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DisbursementEnvelopeRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DisbursementEnvelopeResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorListResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorListResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorListResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorListResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/disbursement_batch": {
+      "post": {
+        "tags": [
+          "PBMS Background Task Disbursement"
+        ],
+        "summary": "Disbursement Batch",
+        "operationId": "disbursement_batch_disbursement_batch_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DisbursementBatchRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DisbursementBatchResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorListResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorListResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorListResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorListResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/search_beneficiaries": {
+      "post": {
+        "tags": [
+          "PBMS Background Task Beneficiary Search"
+        ],
+        "summary": "Search Beneficiaries",
+        "operationId": "search_beneficiaries_search_beneficiaries_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BeneficiarySearchRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BeneficiarySearchResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorListResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorListResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorListResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorListResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/ping": {
+      "get": {
+        "tags": [
+          "ping"
+        ],
+        "summary": "Get Ping",
+        "description": "Returns \"pong\" always, if the service is healthy.\nThis can also used for service health checks.",
+        "operationId": "get_ping_ping_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorListResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorListResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorListResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorListResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "BeneficiarySearchRequest": {
+        "properties": {
+          "request_header": {
+            "$ref": "#/components/schemas/G2PRequestHeader"
+          },
+          "request_body": {
+            "$ref": "#/components/schemas/BeneficiarySearchRequestBody"
+          }
+        },
+        "type": "object",
+        "required": [
+          "request_header",
+          "request_body"
+        ],
+        "title": "BeneficiarySearchRequest"
+      },
+      "BeneficiarySearchRequestBody": {
+        "properties": {
+          "pagination_request": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/G2PPaginationRequest"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "request_payload": {
+            "$ref": "#/components/schemas/BeneficiarySearchRequestPayload"
+          }
+        },
+        "type": "object",
+        "required": [
+          "request_payload"
+        ],
+        "title": "BeneficiarySearchRequestBody"
+      },
+      "BeneficiarySearchRequestPayload": {
+        "properties": {
+          "beneficiary_list_id": {
+            "type": "string",
+            "title": "Beneficiary List Id"
+          },
+          "target_registry": {
+            "type": "string",
+            "title": "Target Registry"
+          }
+        },
+        "type": "object",
+        "required": [
+          "beneficiary_list_id",
+          "target_registry"
+        ],
+        "title": "BeneficiarySearchRequestPayload"
+      },
+      "BeneficiarySearchResponse": {
+        "properties": {
+          "response_header": {
+            "$ref": "#/components/schemas/G2PResponseHeader"
+          },
+          "response_body": {
+            "$ref": "#/components/schemas/BeneficiarySearchResponseBody"
+          }
+        },
+        "type": "object",
+        "required": [
+          "response_header",
+          "response_body"
+        ],
+        "title": "BeneficiarySearchResponse"
+      },
+      "BeneficiarySearchResponseBody": {
+        "properties": {
+          "pagination_response": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/G2PPaginationResponse"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "response_payload": {
+            "$ref": "#/components/schemas/BeneficiarySearchResponsePayload"
+          }
+        },
+        "type": "object",
+        "required": [
+          "response_payload"
+        ],
+        "title": "BeneficiarySearchResponseBody"
+      },
+      "BeneficiarySearchResponsePayload": {
+        "properties": {
+          "beneficiary_count": {
+            "type": "integer",
+            "title": "Beneficiary Count"
+          },
+          "beneficiaries": {
+            "anyOf": [
+              {
+                "items": {},
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Beneficiaries"
+          }
+        },
+        "type": "object",
+        "required": [
+          "beneficiary_count"
+        ],
+        "title": "BeneficiarySearchResponsePayload"
+      },
+      "DisbursementBatchRequest": {
+        "properties": {
+          "request_header": {
+            "$ref": "#/components/schemas/G2PRequestHeader"
+          },
+          "request_body": {
+            "$ref": "#/components/schemas/DisbursementBatchRequestBody"
+          }
+        },
+        "type": "object",
+        "required": [
+          "request_header",
+          "request_body"
+        ],
+        "title": "DisbursementBatchRequest"
+      },
+      "DisbursementBatchRequestBody": {
+        "properties": {
+          "pagination_request": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/G2PPaginationRequest"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "request_payload": {
+            "$ref": "#/components/schemas/DisbursementBatchRequestPayload"
+          }
+        },
+        "type": "object",
+        "required": [
+          "request_payload"
+        ],
+        "title": "DisbursementBatchRequestBody"
+      },
+      "DisbursementBatchRequestPayload": {
+        "properties": {
+          "beneficiary_list_id": {
+            "type": "string",
+            "title": "Beneficiary List Id"
+          }
+        },
+        "type": "object",
+        "required": [
+          "beneficiary_list_id"
+        ],
+        "title": "DisbursementBatchRequestPayload"
+      },
+      "DisbursementBatchResponse": {
+        "properties": {
+          "response_header": {
+            "$ref": "#/components/schemas/G2PResponseHeader"
+          },
+          "response_body": {
+            "$ref": "#/components/schemas/DisbursementBatchResponseBody"
+          }
+        },
+        "type": "object",
+        "required": [
+          "response_header",
+          "response_body"
+        ],
+        "title": "DisbursementBatchResponse"
+      },
+      "DisbursementBatchResponseBody": {
+        "properties": {
+          "pagination_response": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/G2PPaginationResponse"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "response_payload": {
+            "$ref": "#/components/schemas/DisbursementBatchResponsePayload"
+          }
+        },
+        "type": "object",
+        "required": [
+          "response_payload"
+        ],
+        "title": "DisbursementBatchResponseBody"
+      },
+      "DisbursementBatchResponsePayload": {
+        "properties": {
+          "beneficiary_list_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Beneficiary List Id"
+          },
+          "disbursement_batches": {
+            "items": {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            "type": "array",
+            "title": "Disbursement Batches"
+          }
+        },
+        "type": "object",
+        "required": [
+          "disbursement_batches"
+        ],
+        "title": "DisbursementBatchResponsePayload"
+      },
+      "DisbursementEnvelopeRequest": {
+        "properties": {
+          "request_header": {
+            "$ref": "#/components/schemas/G2PRequestHeader"
+          },
+          "request_body": {
+            "$ref": "#/components/schemas/DisbursementEnvelopeRequestBody"
+          }
+        },
+        "type": "object",
+        "required": [
+          "request_header",
+          "request_body"
+        ],
+        "title": "DisbursementEnvelopeRequest"
+      },
+      "DisbursementEnvelopeRequestBody": {
+        "properties": {
+          "pagination_request": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/G2PPaginationRequest"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "request_payload": {
+            "$ref": "#/components/schemas/DisbursementEnvelopeRequestPayload"
+          }
+        },
+        "type": "object",
+        "required": [
+          "request_payload"
+        ],
+        "title": "DisbursementEnvelopeRequestBody"
+      },
+      "DisbursementEnvelopeRequestPayload": {
+        "properties": {
+          "beneficiary_list_id": {
+            "type": "string",
+            "title": "Beneficiary List Id"
+          }
+        },
+        "type": "object",
+        "required": [
+          "beneficiary_list_id"
+        ],
+        "title": "DisbursementEnvelopeRequestPayload"
+      },
+      "DisbursementEnvelopeResponse": {
+        "properties": {
+          "response_header": {
+            "$ref": "#/components/schemas/G2PResponseHeader"
+          },
+          "response_body": {
+            "$ref": "#/components/schemas/DisbursementEnvelopeResponseBody"
+          }
+        },
+        "type": "object",
+        "required": [
+          "response_header",
+          "response_body"
+        ],
+        "title": "DisbursementEnvelopeResponse"
+      },
+      "DisbursementEnvelopeResponseBody": {
+        "properties": {
+          "pagination_response": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/G2PPaginationResponse"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "response_payload": {
+            "$ref": "#/components/schemas/DisbursementEnvelopeResponsePayload"
+          }
+        },
+        "type": "object",
+        "required": [
+          "response_payload"
+        ],
+        "title": "DisbursementEnvelopeResponseBody"
+      },
+      "DisbursementEnvelopeResponsePayload": {
+        "properties": {
+          "beneficiary_list_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Beneficiary List Id"
+          },
+          "disbursement_envelopes": {
+            "anyOf": [
+              {
+                "items": {
+                  "additionalProperties": true,
+                  "type": "object"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Disbursement Envelopes"
+          }
+        },
+        "type": "object",
+        "title": "DisbursementEnvelopeResponsePayload"
+      },
+      "ErrorListResponse": {
+        "properties": {
+          "errors": {
+            "items": {
+              "$ref": "#/components/schemas/ErrorResponse"
+            },
+            "type": "array",
+            "title": "Errors"
+          }
+        },
+        "type": "object",
+        "required": [
+          "errors"
+        ],
+        "title": "ErrorListResponse"
+      },
+      "ErrorResponse": {
+        "properties": {
+          "code": {
+            "type": "string",
+            "title": "Code",
+            "default": ""
+          },
+          "message": {
+            "type": "string",
+            "title": "Message",
+            "default": ""
+          }
+        },
+        "type": "object",
+        "title": "ErrorResponse"
+      },
+      "G2PPaginationRequest": {
+        "properties": {
+          "current_page": {
+            "type": "integer",
+            "minimum": 1.0,
+            "title": "Current Page"
+          },
+          "page_size": {
+            "type": "integer",
+            "minimum": 1.0,
+            "title": "Page Size"
+          },
+          "sort_by": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Sort By"
+          },
+          "filter_by": {
+            "anyOf": [
+              {},
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Filter By"
+          },
+          "search_text": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Search Text"
+          }
+        },
+        "type": "object",
+        "required": [
+          "current_page",
+          "page_size"
+        ],
+        "title": "G2PPaginationRequest"
+      },
+      "G2PPaginationResponse": {
+        "properties": {
+          "number_of_items": {
+            "type": "integer",
+            "minimum": 0.0,
+            "title": "Number Of Items"
+          },
+          "number_of_pages": {
+            "type": "integer",
+            "minimum": 0.0,
+            "title": "Number Of Pages"
+          }
+        },
+        "type": "object",
+        "required": [
+          "number_of_items",
+          "number_of_pages"
+        ],
+        "title": "G2PPaginationResponse"
+      },
+      "G2PRequestHeader": {
+        "properties": {
+          "sender_app_mnemonic": {
+            "type": "string",
+            "title": "Sender App Mnemonic"
+          },
+          "sender_app_url": {
+            "type": "string",
+            "title": "Sender App Url"
+          },
+          "request_id": {
+            "type": "string",
+            "title": "Request Id"
+          },
+          "request_timestamp": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Request Timestamp"
+          },
+          "instance_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Instance Id"
+          }
+        },
+        "type": "object",
+        "required": [
+          "sender_app_mnemonic",
+          "sender_app_url",
+          "request_id",
+          "request_timestamp"
+        ],
+        "title": "G2PRequestHeader"
+      },
+      "G2PResponseHeader": {
+        "properties": {
+          "request_id": {
+            "type": "string",
+            "title": "Request Id"
+          },
+          "response_status": {
+            "$ref": "#/components/schemas/G2PResponseStatus"
+          },
+          "response_error_code": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Response Error Code"
+          },
+          "response_error_message": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Response Error Message"
+          },
+          "response_timestamp": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Response Timestamp"
+          }
+        },
+        "type": "object",
+        "required": [
+          "request_id",
+          "response_status",
+          "response_timestamp"
+        ],
+        "title": "G2PResponseHeader"
+      },
+      "G2PResponseStatus": {
+        "type": "string",
+        "enum": [
+          "ERROR",
+          "SUCCESS"
+        ],
+        "title": "G2PResponseStatus"
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "type": "array",
+            "title": "Detail"
+          }
+        },
+        "type": "object",
+        "title": "HTTPValidationError"
+      },
+      "SummaryRequest": {
+        "properties": {
+          "request_header": {
+            "$ref": "#/components/schemas/G2PRequestHeader"
+          },
+          "request_body": {
+            "$ref": "#/components/schemas/SummaryRequestBody"
+          }
+        },
+        "type": "object",
+        "required": [
+          "request_header",
+          "request_body"
+        ],
+        "title": "SummaryRequest"
+      },
+      "SummaryRequestBody": {
+        "properties": {
+          "pagination_request": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/G2PPaginationRequest"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "request_payload": {
+            "$ref": "#/components/schemas/SummaryRequestPayload"
+          }
+        },
+        "type": "object",
+        "required": [
+          "request_payload"
+        ],
+        "title": "SummaryRequestBody"
+      },
+      "SummaryRequestPayload": {
+        "properties": {
+          "beneficiary_list_id": {
+            "type": "string",
+            "title": "Beneficiary List Id"
+          },
+          "target_registry": {
+            "type": "string",
+            "title": "Target Registry"
+          }
+        },
+        "type": "object",
+        "required": [
+          "beneficiary_list_id",
+          "target_registry"
+        ],
+        "title": "SummaryRequestPayload"
+      },
+      "SummaryResponse": {
+        "properties": {
+          "response_header": {
+            "$ref": "#/components/schemas/G2PResponseHeader"
+          },
+          "response_body": {
+            "$ref": "#/components/schemas/SummaryResponseBody"
+          }
+        },
+        "type": "object",
+        "required": [
+          "response_header",
+          "response_body"
+        ],
+        "title": "SummaryResponse"
+      },
+      "SummaryResponseBody": {
+        "properties": {
+          "pagination_response": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/G2PPaginationResponse"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "response_payload": {
+            "$ref": "#/components/schemas/SummaryResponsePayload"
+          }
+        },
+        "type": "object",
+        "required": [
+          "response_payload"
+        ],
+        "title": "SummaryResponseBody"
+      },
+      "SummaryResponsePayload": {
+        "properties": {
+          "beneficiary_list_id": {
+            "type": "string",
+            "title": "Beneficiary List Id"
+          },
+          "summary": {
+            "anyOf": [
+              {},
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Summary"
+          }
+        },
+        "type": "object",
+        "required": [
+          "beneficiary_list_id"
+        ],
+        "title": "SummaryResponsePayload"
+      },
+      "ValidationError": {
+        "properties": {
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "type": "array",
+            "title": "Location"
+          },
+          "msg": {
+            "type": "string",
+            "title": "Message"
+          },
+          "type": {
+            "type": "string",
+            "title": "Error Type"
+          },
+          "input": {
+            "title": "Input"
+          },
+          "ctx": {
+            "type": "object",
+            "title": "Context"
+          }
+        },
+        "type": "object",
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError"
+      }
+    }
+  }
+}

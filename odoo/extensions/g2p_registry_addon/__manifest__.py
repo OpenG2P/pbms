@@ -1,0 +1,29 @@
+{
+    "name": "PBMS Registry Addon",
+    "version": "3.1.1",
+    "summary": "OpenG2P Registry Addon",
+    "description": "OpenG2P Registry Addon",
+    "category": "G2P",
+    "license": "LGPL-3",
+    "depends": ["base_setup", "web", "g2p_pbms"],
+    "data": [
+        "security/ir.model.access.csv",
+        "views/eligibility/eligibility_rule_view.xml",
+        "views/entitlement/entitlement_rule_view.xml",
+        "views/priority/priority_rule_view.xml",
+        "views/registry/farmer_registry_view.xml",
+        "views/registry/household_registry_view.xml",
+        "views/bgtask/bgtask_view.xml",
+        "views/menu.xml",
+    ],
+    "assets": {
+        "web.assets_backend": [
+            "/g2p_registry_addon/static/src/css/registry_styles.scss",
+            "/g2p_registry_addon/static/src/js/beneficiaries_widget.js",
+            "/g2p_registry_addon/static/src/xml/g2p_beneficiaries_info_tpl.xml",
+        ],
+    },
+    "installable": True,
+    "application": True,
+    "auto_install": False,
+}

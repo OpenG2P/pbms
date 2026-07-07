@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Actions -->
+    <record id="action_g2p_farmer_registry" model="ir.actions.act_window">
+        <field name="name">Farmer Registry</field>
+        <field name="res_model">g2p.register.farmer</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <record id="view_g2p_farmer_registry_form" model="ir.ui.view">
+        <field name="name">g2p.register.farmer.form</field>
+        <field name="model">g2p.register.farmer</field>
+        <field name="arch" type="xml">
+            <form string="G2P Farmer Registry" create="0">
+                <sheet>
+                    <group string="Identity">
+                        <field name="internal_record_id"/>
+                        <field name="functional_record_id"/>
+                        <field name="link_internal_record_id"/>
+                        <field name="record_name"/>
+                        <field name="record_status"/>
+                        <field name="record_status_reason"/>
+                        <field name="foundational_id"/>
+                        <field name="national_id_masked"/>
+                    </group>
+                    <group string="Person">
+                        <field name="first_name"/>
+                        <field name="middle_name"/>
+                        <field name="last_name"/>
+                        <field name="given_name"/>
+                        <field name="prefix"/>
+                        <field name="suffix"/>
+                        <field name="gender"/>
+                        <field name="birth_date"/>
+                        <field name="estimated_age"/>
+                        <field name="marital_status"/>
+                        <field name="occupation"/>
+                        <field name="income_level"/>
+                        <field name="language_code"/>
+                        <field name="language_spoken"/>
+                        <field name="education_level"/>
+                        <field name="has_personal_phone"/>
+                        <field name="registration_date"/>
+                    </group>
+                    <group string="Farmer Attributes">
+                        <field name="disabled"/>
+                        <field name="disability_type"/>
+                        <field name="disability_severity"/>
+                        <field name="source_of_income"/>
+                        <field name="source_of_income_other"/>
+                    </group>
+                    <group string="Geo">
+                        <field name="latitude"/>
+                        <field name="longitude"/>
+                        <field name="altitude"/>
+                        <field name="plus_code"/>
+                        <field name="address_line_1"/>
+                        <field name="address_line_2"/>
+                        <field name="postal_code"/>
+                        <field name="country_code"/>
+                        <field name="geo_lowest_level_value_id"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_g2p_farmer_registry_tree" model="ir.ui.view">
+        <field name="name">g2p.register.farmer.tree</field>
+        <field name="model">g2p.register.farmer</field>
+        <field name="arch" type="xml">
+            <tree string="G2P Farmer Registry" create="0">
+                <field name="internal_record_id"/>
+                <field name="functional_record_id"/>
+                <field name="first_name"/>
+                <field name="last_name"/>
+                <field name="gender"/>
+                <field name="estimated_age"/>
+                <field name="disabled"/>
+                <field name="source_of_income"/>
+                <field name="education_level"/>
+                <field name="country_code"/>
+                <button name="action_open_view" type="object" class="fa fa-eye" title="View"/>
+            </tree>
+        </field>
+    </record>
+</odoo>

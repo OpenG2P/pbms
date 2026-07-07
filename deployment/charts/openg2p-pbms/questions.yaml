@@ -1,0 +1,117 @@
+questions:
+# General Settings
+- variable: hostname
+  description: Hostname to access PBMS
+  type: string
+  label: Hostname
+  group: General Settings
+
+- variable: global.postgresqlHost
+  description: Hostname to access PostgreSQL
+  type: string
+  label: PostgreSQL Host 
+  group: General Settings
+
+- variable: global.keycloakBaseUrl
+  description: Keycloak Base URL used in all components (e.g. https://keycloak.openg2p.sandbox.net)
+  type: string
+  label: Keycloak Base URL
+  group: General Settings
+
+- variable: global.mailInstallationName
+  description: Email Service name
+  type: string
+  label: Email Service Name
+  group: General Settings
+
+# Background Task Settings
+- variable: openg2p-pbms-bg-task-celery-beat-producers.envVars.BG_TASK_CELERY_BEAT_PRODUCER_FREQUENCY
+  description: Frequency (in seconds) for Celery Beat Producer to run.
+  type: int
+  label: Celery Beat Producer Frequency
+  group: Background Task Settings
+  show_if: "openg2p-pbms-bg-task-celery-beat-producers.enabled=true"
+
+- variable: openg2p-pbms-bg-task-celery-beat-producers.envVars.BG_TASK_CELERY_BEAT_BATCH_SIZE
+  description: Number of tasks to process in each batch by Celery Beat Producer.
+  type: int
+  label: Celery Beat Producer Batch Size
+  group: Background Task Settings
+  show_if: "openg2p-pbms-bg-task-celery-beat-producers.enabled=true"
+
+- variable: openg2p-pbms-bg-task-celery-beat-producers.envVars.BG_TASK_CELERY_BEAT_NO_OF_TASKS_TO_PROCESS
+  description: Number of tasks to process per run by Celery Beat Producer.
+  type: int
+  label: Celery Beat Producer Number of Tasks to Process
+  group: Background Task Settings
+  show_if: "openg2p-pbms-bg-task-celery-beat-producers.enabled=true"
+
+- variable: openg2p-pbms-bg-task-celery-workers.envVars.BG_TASK_CELERY_WORKERS_G2P_BRIDGE_BASE_URL
+  description: Base URL for G2P Bridge API used by Celery Workers.
+  type: string
+  label: Celery Workers G2P Bridge Base URL
+  group: Background Task Settings
+  show_if: "openg2p-pbms-bg-task-celery-workers.enabled=true"
+
+- variable: openg2p-pbms-bg-task-celery-workers.envVars.BG_TASK_CELERY_WORKERS_BATCH_SIZE
+  description: Number of tasks to process in each batch by Celery Workers.
+  type: int
+  label: Celery Workers Batch Size
+  group: Background Task Settings
+  show_if: "openg2p-pbms-bg-task-celery-workers.enabled=true"
+
+# Portal API Settings
+- variable: staffPortalApi.enabled
+  description: Enable Staff Portal API component
+  type: boolean
+  label: Enable Staff Portal API
+  group: Portal API Settings
+
+- variable: benePortalApi.enabled
+  description: Enable Bene Portal API component
+  type: boolean
+  label: Enable Bene Portal API
+  group: Portal API Settings
+
+- variable: benePortalApi.envVars.COMMON_AUTH_DEFAULT_ISSUERS
+  description: Default list of OIDC issuers for Bene Portal API
+  type: string
+  label: Bene Portal API Default Issuers
+  group: Portal API Settings
+  show_if: "benePortalApi.enabled=true"
+
+- variable: benePortalApi.envVars.COMMON_AUTH_DEFAULT_JWKS_URLS
+  description: Default list of JWKS URLs for Bene Portal API
+  type: string
+  label: Bene Portal API Default JWKS URLs
+  group: Portal API Settings
+  show_if: "benePortalApi.enabled=true"
+
+# Registry settings
+- variable: global.registryDB 
+  description: Name of the Registry DB in PostgreSQL 
+  type: string
+  label: Registry DB 
+  group: Registry
+
+- variable: global.registryDBUser 
+  description: Name of the Registry DB User in PostgreSQL 
+  type: string
+  label: Registry DB User
+  group: Registry
+
+- variable: global.registryDBSecret
+  description: Name of the Registry DB Secret that contains user password
+  type: string
+  label: Registry DB Secret with User Password
+  group: Registry
+
+- variable: global.registryDBUserPasswordKey
+  description: Name of the Registry DB Secret key that contains user password
+  type: string
+  label: Registry DB Secret Key with User Password
+  group: Registry 
+
+
+
+# End of main PBMS/values.yaml-driven questions.

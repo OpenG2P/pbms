@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_g2p_register_household" model="ir.actions.act_window">
+        <field name="name">Register Household</field>
+        <field name="res_model">g2p.register.households</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <record id="view_g2p_register_household_form" model="ir.ui.view">
+        <field name="name">g2p.register.households.form</field>
+        <field name="model">g2p.register.households</field>
+        <field name="arch" type="xml">
+            <form string="G2P Register Household" create="0">
+                <sheet>
+                    <group string="Identity">
+                        <field name="internal_record_id"/>
+                        <field name="functional_record_id"/>
+                        <field name="record_name"/>
+                        <field name="record_status"/>
+                        <field name="record_status_reason"/>
+                        <field name="household_head_internal_record_id"/>
+                        <field name="household_head_name"/>
+                        <field name="headship_type"/>
+                    </group>
+                    <group string="Composition">
+                        <field name="size_total"/>
+                        <field name="size_adults"/>
+                        <field name="size_children_u5"/>
+                        <field name="size_school_age"/>
+                        <field name="size_elderly"/>
+                        <field name="number_of_female_members"/>
+                        <field name="number_of_male_members"/>
+                        <field name="elderly_member_present"/>
+                    </group>
+                    <group string="Dwelling">
+                        <field name="dwelling_type"/>
+                        <field name="roof_material"/>
+                        <field name="wall_material"/>
+                        <field name="floor_material"/>
+                        <field name="tenure_status"/>
+                        <field name="rooms_count"/>
+                        <field name="overcrowding_indicator"/>
+                    </group>
+                    <group string="Utilities">
+                        <field name="water_source_type"/>
+                        <field name="water_distance_minutes"/>
+                        <field name="sanitation_type"/>
+                        <field name="lighting_source"/>
+                        <field name="cooking_fuel_type"/>
+                        <field name="mobile_phone_type"/>
+                    </group>
+                    <group string="Geo">
+                        <field name="latitude"/>
+                        <field name="longitude"/>
+                        <field name="altitude"/>
+                        <field name="plus_code"/>
+                        <field name="address_line_1"/>
+                        <field name="address_line_2"/>
+                        <field name="postal_code"/>
+                        <field name="country_code"/>
+                        <field name="geo_lowest_level_value_id"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_g2p_register_household_tree" model="ir.ui.view">
+        <field name="name">g2p.register.households.tree</field>
+        <field name="model">g2p.register.households</field>
+        <field name="arch" type="xml">
+            <tree string="G2P Register Household" create="0">
+                <field name="internal_record_id"/>
+                <field name="functional_record_id"/>
+                <field name="household_head_name"/>
+                <field name="headship_type"/>
+                <field name="size_total"/>
+                <field name="size_children_u5"/>
+                <field name="size_elderly"/>
+                <field name="dwelling_type"/>
+                <field name="tenure_status"/>
+                <field name="water_source_type"/>
+                <field name="sanitation_type"/>
+                <button name="action_open_view" type="object" class="fa fa-eye" title="View"/>
+            </tree>
+        </field>
+    </record>
+</odoo>

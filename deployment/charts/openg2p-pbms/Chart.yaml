@@ -1,0 +1,22 @@
+apiVersion: v2
+name: openg2p-pbms
+description: Helm chart for OpenG2P PBMS
+type: application
+version: 0.0.0-develop
+dependencies:
+- name: postgres-init
+  version: 0.0.0-develop
+  repository: https://openg2p.github.io/openg2p-helm
+  condition: postgres-init.enabled
+- name: odoo
+  version: 26.3.0
+  repository: https://openg2p.github.io/openg2p-helm
+  condition: odoo.enabled
+- name: redis
+  version: 19.6.4
+  repository: https://openg2p.github.io/openg2p-helm
+  condition: redis.enabled
+icon: https://openg2p.github.io/openg2p-helm/openg2p-logo.png
+annotations:
+  catalog.cattle.io/display-name: "OpenG2P PBMS"
+  openg2p.org/add-to-rancher: ""

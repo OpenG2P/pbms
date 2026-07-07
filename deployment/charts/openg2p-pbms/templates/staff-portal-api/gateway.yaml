@@ -1,0 +1,36 @@
+{{- with .Values.staffPortalApi }}
+{{- if and .enabled .istio.enabled .istio.gateway.enabled }}
+apiVersion: networking.istio.io/v1beta1
+kind: Gateway
+metadata:
+  name: {{ template "common.names.fullname" $ }}-staff-portal-api
+  labels: {{- include "common.labels.standard" (dict "customLabels" .commonLabels "context" $) | nindent 4 }}
+  {{- if .commonAnnotations }}
+  annotations: {{- include "common.tplvalues.render" ( dict "value" .commonAnnotations "context" $ ) | nindent 4 }}
+  {{- end }}
+spec:
+  selector: {{- include "common.tplvalues.render" ( dict "value" .istio.gateway.ingressController "context" $) | nindent 4 }}
+  servers:
+  {{- if .istio.gateway.httpEnabled }}
+  - port:
+      name: http2
+      number: 8080
+      protocol: HTTP2
+    hosts:
+      - {{ default $.Values.global.g2pPbmsBgTaskHostname .istio.gateway.host | quote }}
+    {{- if .istio.gateway.httpTlsRedirect }}
+    tls:
+      httpsRedirect: true
+    {{- end }}
+  {{- end }}
+  {{- if .istio.gateway.httpsEnabled }}
+  - port:
+      name: https
+      number: 8443
+      protocol: HTTPS
+    hosts:
+      - {{ default $.Values.global.g2pPbmsBgTaskHostname .istio.gateway.host | quote }}
+    tls: {{- include "common.tplvalues.render" (dict "value" (omit .istio.gateway.tls "enabled") "context" $) | nindent 6 }}
+  {{- end }}
+{{- end }}
+{{- end }}

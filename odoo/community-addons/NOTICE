@@ -1,0 +1,12 @@
+This repository contains code copied from below repositories 
+    - https://github.com/OCA/connector
+    - https://github.com/OCA/web-api
+    - https://github.com/OCA/rest-framework
+    - https://github.com/OCA/server-tools
+    - https://github.com/novacode-nl/odoo-formio
+    - https://github.com/OCA/queue
+    - https://github.com/OCA/server-env
+    - https://github.com/Smile-SA/odoo_addons
+    - https://github.com/OCA/storage
+The ownership of the code is retained by the respective copyright holders as specified in the linked source code repositories. The modules and directories from which the code has been copied are licensed under the GNU Lesser General Public License (LGPL). These programs are free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License as published by the Free Software Foundation, version [3] of the License, or (at your option) any later version. 
+For full licensing terms, see the LICENSE file in the root directory of these projects. 

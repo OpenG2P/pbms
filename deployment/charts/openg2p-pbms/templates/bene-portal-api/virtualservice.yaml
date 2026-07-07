@@ -1,0 +1,35 @@
+{{- with .Values.benePortalApi }}
+{{- if and .enabled .istio.enabled .istio.virtualservice.enabled }}
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: {{ template "common.names.fullname" $ }}-bene-portal-api
+  labels: {{- include "common.labels.standard" (dict "customLabels" .commonLabels "context" $) | nindent 4 }}
+  {{- if .commonAnnotations }}
+  annotations: {{- include "common.tplvalues.render" ( dict "value" .commonAnnotations "context" $ ) | nindent 4 }}
+  {{- end }}
+spec:
+  hosts:
+  - {{ include "common.tplvalues.render" (dict "value" (default $.Values.global.g2pPbmsBgTaskHostname .istio.virtualservice.host) "context" $) | quote }}
+  gateways:
+  - {{ default (include "common.names.fullname" $) .istio.virtualservice.gateway }}
+  http:
+  - headers:
+      request:
+        set:
+          x-forwarded-host: {{ include "common.tplvalues.render" (dict "value" (default $.Values.global.g2pPbmsBgTaskHostname .istio.virtualservice.host) "context" $) | quote }}
+          x-forwarded-proto: https
+    match:
+    - uri:
+        prefix: {{ include "common.tplvalues.render" (dict "value" .istio.virtualservice.prefix "context" $) }}
+    {{- if .istio.virtualservice.rewriteUri }}
+    rewrite:
+      uri: {{ include "common.tplvalues.render" (dict "value" .istio.virtualservice.rewriteUri "context" $) }}
+    {{- end }}
+    route:
+    - destination:
+        host: {{ template "common.names.fullname" $ }}-bene-portal-api
+        port:
+          number: {{ .service.port }}
+{{- end }}
+{{- end }}

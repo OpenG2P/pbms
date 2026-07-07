@@ -1,0 +1,84 @@
+name: Publish PBMS Odoo (core) Docker
+
+# The PBMS Odoo image (openg2p-pbms-core), built from LOCAL in-repo addons
+# (odoo/ core modules, odoo/extensions, odoo/community-addons) plus the one
+# external dependency (openg2p-odoo-commons, cloned at build time). The image
+# tag is the repository ref (branch name or git tag) — e.g. a push to `develop`
+# publishes `:develop`.
+on:
+  push:
+    branches:
+      - "**"
+    tags:
+      - "**"
+    paths:
+      - 'odoo/**'
+      - 'docker/openg2p-pbms-odoo/**'
+      - '.github/workflows/docker-build-core.yml'
+  workflow_dispatch:
+    inputs:
+      base_version:
+        description: "Odoo base image version"
+        default: "17.0-20250807"
+        type: string
+      odoo_commons_ref:
+        description: "openg2p-odoo-commons git ref (tag/branch)"
+        default: "v1.4.0"
+        type: string
+      modules_to_remove:
+        description: "Space-separated Odoo modules to strip from the image (optional)"
+        default: ""
+        type: string
+
+env:
+  IMAGE_NAME: openg2p/openg2p-pbms-core
+
+jobs:
+  docker-build:
+    runs-on: ubuntu-latest
+    name: Docker - core (odoo)
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Docker Login
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.docker_hub_actor }}
+          password: ${{ secrets.docker_hub_token }}
+
+      - name: Derive image tag from repo ref
+        id: meta
+        shell: bash
+        run: |
+          echo "tag=${GITHUB_REF_NAME}" >> "$GITHUB_OUTPUT"
+          echo "created=$(date -u +%Y-%m-%dT%H:%M:%SZ)" >> "$GITHUB_OUTPUT"
+
+      - name: Build and push - core (odoo)
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: docker/openg2p-pbms-odoo/utils/Dockerfile
+          push: true
+          platforms: linux/amd64
+          build-args: |
+            BASE_VERSION=${{ inputs.base_version || '17.0-20250807' }}
+            ODOO_COMMONS_REF=${{ inputs.odoo_commons_ref || 'v1.4.0' }}
+            MODULES_TO_REMOVE=${{ inputs.modules_to_remove || '' }}
+          tags: ${{ env.IMAGE_NAME }}:${{ steps.meta.outputs.tag }}
+          labels: |
+            org.opencontainers.image.created=${{ steps.meta.outputs.created }}
+            org.opencontainers.image.authors=${{ github.repository_owner }}
+            org.opencontainers.image.source=${{ github.repository }}@${{ github.sha }}
+            org.opencontainers.image.version=${{ steps.meta.outputs.tag }}
+            org.opencontainers.image.revision=${{ github.sha }}
+            org.opencontainers.image.vendor=${{ github.repository_owner }}
+            org.opencontainers.image.title=${{ env.IMAGE_NAME }}
+            org.opencontainers.image.description=OpenG2P PBMS Odoo (core) image
+            org.opencontainers.image.licenses=LGPL-3.0-or-later
+            org.openg2p.service.name=core

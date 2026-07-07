@@ -1,0 +1,10 @@
+.o_widget.o_widget_g2p_beneficiaries_widget {
+    width: 180% !important;
+    box-sizing: border-box;
+}
+
+.o_form_view .o_notebook > .tab-content > .tab-pane > :first-child:not(.o_group) .o_field_x2many.o_field_x2many_list .o_list_renderer,
+.o_form_view .o_notebook > .tab-content > .tab-pane > .o_invisible_modifier:first-child .o_field_x2many.o_field_x2many_list .o_list_renderer {
+    --ListRenderer-margin-x: 0 !important;
+}
+  

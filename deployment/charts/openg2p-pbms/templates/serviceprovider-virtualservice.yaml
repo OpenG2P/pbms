@@ -1,0 +1,55 @@
+{{- if .Values.serviceProviderIngress.enabled }}
+{{- if eq .Values.serviceProviderIngress.type "istio" }}
+{{- if .Values.serviceProviderIngress.istio.virtualservice.enabled }}
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: {{ include "pbms.fullname" . }}-service-provider
+  labels:
+    {{- include "pbms.labels" . | nindent 4 }}
+spec:
+  hosts:
+  - {{ default .Values.serviceProviderHostname .Values.serviceProviderIngress.istio.virtualservice.host | quote }}
+  gateways:
+  - {{ default (printf "%s-service-provider" (include "pbms.fullname" .)) .Values.serviceProviderIngress.istio.virtualservice.gateway }}
+  http:
+  - match:
+    - uri:
+        exact: /
+    - uri:
+        exact: /my
+    - uri:
+        prefix: /my/
+    - uri:
+        exact: /web
+    - uri:
+        exact: /web/login
+    - uri:
+        exact: /web/database/selector
+    redirect:
+      uri: /serviceprovider
+  - match:
+    - uri:
+        prefix: /selfservice
+    redirect:
+      authority: {{ default .Values.selfServiceHostname .Values.selfServiceIngress.istio.virtualservice.host | quote }}
+  - headers:
+      request:
+        set:
+          x-forwarded-host: {{ default .Values.serviceProviderHostname .Values.serviceProviderIngress.istio.virtualservice.host | quote }}
+          x-forwarded-proto: https
+    match:
+    - uri:
+        prefix: {{ include "common.tplvalues.render" (dict "value" .Values.serviceProviderIngress.istio.virtualservice.prefix "context" $) }}
+    {{- if .Values.serviceProviderIngress.istio.virtualservice.rewriteUri }}
+    rewrite:
+      uri: {{ include "common.tplvalues.render" (dict "value" .Values.serviceProviderIngress.istio.virtualservice.rewriteUri "context" $) }}
+    {{- end }}
+    route:
+    - destination:
+        host: {{ include "common.tplvalues.render" (dict "value" .Values.serviceProviderIngress.istio.virtualservice.destination "context" $) }}
+        port:
+          number: {{ include "common.tplvalues.render" (dict "value" .Values.serviceProviderIngress.istio.virtualservice.destinationPort "context" $) }}
+{{- end }}
+{{- end }}
+{{- end }}

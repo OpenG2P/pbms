@@ -1,0 +1,45 @@
+[project]
+name = "odoo-addons-openg2p-pbms-community-addons"
+version = "0.0.0"
+dependencies = [
+    "odoo-addon-component @ {root:uri}/component",
+    "odoo-addon-endpoint_route_handler @ {root:uri}/endpoint_route_handler",
+    "odoo-addon-extendable @ {root:uri}/extendable",
+    "odoo-addon-extendable_fastapi @ {root:uri}/extendable_fastapi",
+    "odoo-addon-fastapi @ {root:uri}/fastapi",
+    "odoo-addon-formio @ {root:uri}/formio",
+    "odoo-addon-formio_data_api @ {root:uri}/formio_data_api",
+    "odoo-addon-formio_storage_filestore @ {root:uri}/formio_storage_filestore",
+    "odoo-addon-graphql_base @ {root:uri}/graphql_base",
+    "odoo-addon-graphql_demo @ {root:uri}/graphql_demo",
+    "odoo-addon-muk_product @ {root:uri}/muk_product",
+    "odoo-addon-muk_web_appsbar @ {root:uri}/muk_web_appsbar",
+    "odoo-addon-muk_web_chatter @ {root:uri}/muk_web_chatter",
+    "odoo-addon-muk_web_colors @ {root:uri}/muk_web_colors",
+    "odoo-addon-muk_web_dialog @ {root:uri}/muk_web_dialog",
+    "odoo-addon-muk_web_enterprise_theme @ {root:uri}/muk_web_enterprise_theme",
+    "odoo-addon-muk_web_theme @ {root:uri}/muk_web_theme",
+    "odoo-addon-queue_job @ {root:uri}/queue_job",
+    "odoo-addon-server_environment @ {root:uri}/server_environment",
+    "odoo-addon-smile_audit @ {root:uri}/smile_audit",
+    # Removing the following modules since cyclic dependency.
+    # "odoo-addon-spp_area @ {root:uri}/spp_area",
+    # "odoo-addon-spp_entitlement_cash @ {root:uri}/spp_entitlement_cash",
+    # "odoo-addon-spp_entitlement_in_kind @ {root:uri}/spp_entitlement_in_kind",
+    # "odoo-addon-spp_programs @ {root:uri}/spp_programs",
+    # "odoo-addon-spp_registry_data_source @ {root:uri}/spp_registry_data_source",
+    # "odoo-addon-spp_service_points @ {root:uri}/spp_service_points",
+    "odoo-addon-storage_backend @ {root:uri}/storage_backend",
+    "odoo-addon-storage_backend_s3 @ {root:uri}/storage_backend_s3",
+    "odoo-addon-storage_file @ {root:uri}/storage_file",
+]
+
+[tool.hatch.metadata]
+allow-direct-references = true
+
+[tool.hatch.build.targets.wheel]
+bypass-selection = true
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"

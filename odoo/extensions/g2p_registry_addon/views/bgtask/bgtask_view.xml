@@ -1,0 +1,18 @@
+<odoo>
+  <record id="view_g2p_eligibility_summary_wizard_form_inherit_beneficiaries" model="ir.ui.view">
+    <field name="name">g2p.bgtask.summary.wizard.form.inherit.beneficiaries</field>
+    <field name="model">g2p.bgtask.summary.wizard</field>
+    <field name="inherit_id" ref="g2p_pbms.view_g2p_eligibility_summary_wizard_form"/>
+    <field name="arch" type="xml">
+      <xpath expr="//page[.//field[@name='target_registry']]/group" position="after">
+        <!-- Only one beneficiary_search field is shown based on registry type -->
+        <group name="beneficiary_search_farmer" invisible="target_registry != 'farmer'">
+          <widget name="g2p_beneficiaries_widget" model="g2p.register.farmer" id="farmer_beneficiary_search_widget"/>
+        </group>
+        <group name="beneficiary_search_household" invisible="target_registry != 'households'">
+          <widget name="g2p_beneficiaries_widget" model="g2p.register.households" id="household_beneficiary_search_widget"/>
+        </group>
+      </xpath>
+    </field>
+  </record>
+</odoo>

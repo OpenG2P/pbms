@@ -1,0 +1,36 @@
+{{- with .Values.benePortalApi }}
+{{- if and .enabled .autoscaling.enabled }}
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: {{ include "common.names.fullname" $ }}-bene-portal-api
+  labels: {{- include "common.labels.standard" (dict "customLabels" .commonLabels "context" $) | nindent 4 }}
+  {{- if .commonAnnotations }}
+  annotations: {{- include "common.tplvalues.render" ( dict "value" .commonAnnotations "context" $ ) | nindent 4 }}
+  {{- end }}
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: {{ include "common.names.fullname" $ }}-bene-portal-api
+  minReplicas: {{ .autoscaling.minReplicas }}
+  maxReplicas: {{ .autoscaling.maxReplicas }}
+  metrics:
+    {{- if .autoscaling.targetCPUUtilizationPercentage }}
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: {{ .autoscaling.targetCPUUtilizationPercentage }}
+    {{- end }}
+    {{- if .autoscaling.targetMemoryUtilizationPercentage }}
+    - type: Resource
+      resource:
+        name: memory
+        target:
+          type: Utilization
+          averageUtilization: {{ .autoscaling.targetMemoryUtilizationPercentage }}
+    {{- end }}
+{{- end }}
+{{- end }}
