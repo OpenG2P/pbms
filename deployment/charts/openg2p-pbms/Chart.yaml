@@ -14,7 +14,7 @@ type: application
 version: 0.0.0-develop
 dependencies:
 - name: postgres-init
-  version: 0.0.0-develop
+  version: 1.2.0
   repository: https://openg2p.github.io/openg2p-helm
   condition: postgres-init.enabled
 - name: odoo
