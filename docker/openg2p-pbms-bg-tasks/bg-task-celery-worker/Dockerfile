@@ -18,7 +18,7 @@ RUN pip install --upgrade pip setuptools && \
         "git+https://github.com/openg2p/openg2p-fastapi-common@${FASTAPI_COMMON_REF}#subdirectory=openg2p-fastapi-common" \
         "git+https://github.com/openg2p/openg2p-fastapi-common@${FASTAPI_COMMON_REF}#subdirectory=openg2p-fastapi-auth" \
         "git+https://github.com/openg2p/openg2p-fastapi-common@${FASTAPI_COMMON_REF}#subdirectory=openg2p-fastapi-auth-models" \
-        "git+https://github.com/OpenG2P/g2p-bridge@${G2P_BRIDGE_REF}#subdirectory=core/models"
+        "git+https://gitlab.com/openg2p/g2p-bridge/g2p-bridge@${G2P_BRIDGE_REF}#subdirectory=core/models"
 
 # Local source: PBMS + bg-task models, the celery workers, and the registry
 # adapter extensions. Remaining deps resolve from PyPI via each pyproject.
