@@ -85,7 +85,7 @@ odoo:
   extraAddonsUrlsToPull: ''
 
   image:
-    repository: openg2p/openg2p-pbms-core
+    repository: registry.gitlab.com/openg2p/pbms/pbms/openg2p-pbms-core
     tag: "develop"
     pullPolicy: Always
 
@@ -170,7 +170,7 @@ beatProducers:
     name: ""
 
   image:
-    repository: openg2p/openg2p-pbms-bg-task-celery-beat-producers
+    repository: registry.gitlab.com/openg2p/pbms/pbms/openg2p-pbms-bg-task-celery-beat-producers
     tag: "develop"
     pullPolicy: Always
 
@@ -334,7 +334,7 @@ celeryWorkers:
     name: ""
 
   image:
-    repository: openg2p/openg2p-pbms-bg-task-celery-workers
+    repository: registry.gitlab.com/openg2p/pbms/pbms/openg2p-pbms-bg-task-celery-workers
     tag: "develop"
     pullPolicy: Always
 
@@ -503,7 +503,7 @@ staffPortalApi:
     name: ""
 
   image:
-    repository: openg2p/openg2p-pbms-staff-portal-api
+    repository: registry.gitlab.com/openg2p/pbms/pbms/openg2p-pbms-staff-portal-api
     tag: "develop"
     pullPolicy: Always
 
@@ -667,7 +667,7 @@ benePortalApi:
     name: ""
 
   image:
-    repository: openg2p/openg2p-pbms-bene-portal-api
+    repository: registry.gitlab.com/openg2p/pbms/pbms/openg2p-pbms-bene-portal-api
     tag: "develop"
     pullPolicy: Always
 
