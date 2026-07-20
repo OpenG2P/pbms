@@ -24,8 +24,8 @@ on:
         default: "develop"
         type: string
       g2p_bridge_ref:
-        description: "openg2p-g2p-bridge git ref for openg2p-g2p-bridge-models"
-        default: "2.0"
+        description: "g2p-bridge git ref for the openg2p-g2p-bridge-models package (core/models)"
+        default: "develop"
         type: string
 
 jobs:
@@ -73,7 +73,7 @@ jobs:
           platforms: linux/amd64
           build-args: |
             FASTAPI_COMMON_REF=${{ inputs.fastapi_common_ref || 'develop' }}
-            G2P_BRIDGE_REF=${{ inputs.g2p_bridge_ref || '2.0' }}
+            G2P_BRIDGE_REF=${{ inputs.g2p_bridge_ref || 'develop' }}
           tags: ${{ matrix.image }}:${{ steps.meta.outputs.tag }}
           labels: |
             org.opencontainers.image.created=${{ steps.meta.outputs.created }}

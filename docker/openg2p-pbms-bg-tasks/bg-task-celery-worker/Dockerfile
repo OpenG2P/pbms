@@ -4,7 +4,7 @@ FROM python:3.12.11-alpine3.22
 # workflow input. The PBMS bg-task code (models, workers) and the registry
 # adapter extensions are installed from LOCAL source (build context = repo root).
 ARG FASTAPI_COMMON_REF=develop
-ARG G2P_BRIDGE_REF=2.0
+ARG G2P_BRIDGE_REF=develop
 
 RUN apk add --no-cache --virtual .build-deps gcc libc-dev linux-headers make \
  && apk add --no-cache bash git gettext libpq-dev libffi-dev openssl-dev
@@ -18,7 +18,7 @@ RUN pip install --upgrade pip setuptools && \
         "git+https://github.com/openg2p/openg2p-fastapi-common@${FASTAPI_COMMON_REF}#subdirectory=openg2p-fastapi-common" \
         "git+https://github.com/openg2p/openg2p-fastapi-common@${FASTAPI_COMMON_REF}#subdirectory=openg2p-fastapi-auth" \
         "git+https://github.com/openg2p/openg2p-fastapi-common@${FASTAPI_COMMON_REF}#subdirectory=openg2p-fastapi-auth-models" \
-        "git+https://github.com/openg2p/openg2p-g2p-bridge@${G2P_BRIDGE_REF}#subdirectory=openg2p-g2p-bridge-models"
+        "git+https://github.com/OpenG2P/g2p-bridge@${G2P_BRIDGE_REF}#subdirectory=core/models"
 
 # Local source: PBMS + bg-task models, the celery workers, and the registry
 # adapter extensions. Remaining deps resolve from PyPI via each pyproject.
