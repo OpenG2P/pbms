@@ -41,17 +41,15 @@ jobs:
       # Dockerfile actually declares (the pipeline refuses a false pin).
       #   FASTAPI_COMMON_REF -> github openg2p-fastapi-common @ develop
       #   G2P_BRIDGE_REF     -> gitlab g2p-bridge/g2p-bridge  @ develop
-      #   ODOO_COMMONS_REF   -> github openg2p-odoo-commons    @ v1.4.0
+      # The core (odoo) image is NOT pinned: its Dockerfile clones openg2p-odoo-commons
+      # with `git clone -b ${ODOO_COMMONS_REF}`, which accepts a branch/tag NAME only, not
+      # a SHA — a pin resolves the ref to a SHA and breaks the clone. Its ARG defaults to
+      # the immutable tag v1.4.0, so it stays reproducible without a pin.
       images: |
         [
           {"name": "openg2p-pbms-core",
            "repo": "openg2p/openg2p-pbms-core",
-           "dockerfile": "docker/openg2p-pbms-odoo/utils/Dockerfile",
-           "pins": [
-             {"arg": "ODOO_COMMONS_REF",
-              "repo": "https://github.com/OpenG2P/openg2p-odoo-commons",
-              "ref": "v1.4.0"}
-           ]},
+           "dockerfile": "docker/openg2p-pbms-odoo/utils/Dockerfile"},
           {"name": "openg2p-pbms-staff-portal-api",
            "repo": "openg2p/openg2p-pbms-staff-portal-api",
            "dockerfile": "docker/openg2p-pbms-apis/staff-portal-api/Dockerfile",
