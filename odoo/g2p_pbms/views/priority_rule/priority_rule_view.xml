@@ -19,11 +19,6 @@
                         <field name="target_registry" invisible="0"/>
                     </group>
                 </sheet>
-                <sheet>
-                    <group>
-                        <field name="sql_query"/>
-                    </group>
-                </sheet>
             </form>
         </field>
     </record>

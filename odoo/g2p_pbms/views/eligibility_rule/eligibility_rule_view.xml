@@ -21,11 +21,6 @@
                         <field name="set_operator" readonly="rule_number==1"/>
                     </group>
                 </sheet>
-                <sheet>
-                    <group>
-                        <field name='sql_query'/>
-                    </group>
-                </sheet>
             </form>
         </field>
     </record>

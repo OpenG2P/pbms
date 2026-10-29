@@ -19,6 +19,5 @@ class G2PEligibilityRuleDefinition(BaseORMModel):
     description = mapped_column(String, nullable=True)
     target_registry = mapped_column(String, nullable=False)
     pbms_domain = mapped_column(String, nullable=False)
-    sql_query = mapped_column(String, nullable=True)
     create_date = mapped_column(TIMESTAMP(timezone=False), nullable=True)
     write_date = mapped_column(TIMESTAMP(timezone=False), nullable=True)

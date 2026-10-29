@@ -4,10 +4,7 @@ import logging
 import requests
 from odoo.exceptions import UserError, AccessError
 from odoo import models, fields, api, _
-from odoo.tools.safe_eval import safe_eval
-
 from odoo.addons.g2p_registry_type_addon.models import (
-    G2PTargetModelMapping,
     G2PRegistryType,
 )
 from openg2p_fastapi_common.schemas import G2PRequestHeader, G2PPaginationRequest
@@ -92,7 +89,6 @@ class G2PBGTaskSummaryWizard(models.TransientModel):
 
     dummy_beneficiaries_field = fields.Text(string="Beneficiaries", compute="_compute_dummy")
 
-    sql_query = fields.Char(string="Query", store=True)
     order_by_condition = fields.Char(string="Order By", default="name")
 
     # Fields for Disbursement Envelope and Disbursement Batch Lines
@@ -394,73 +390,6 @@ class G2PBGTaskSummaryWizard(models.TransientModel):
         for rec in self:
             rec.entitlement_group_title = 'Entitlement Statistics for %s' % rec.target_registry.capitalize()
 
-    def _build_sql_query(self, odoo_domain, target_registry):
-        sql_query=""
-        order_by_field="internal_record_id"
-        try:
-            domain_value = safe_eval(odoo_domain or "[]")
-        except Exception as e:
-            _logger.error(
-                "Error evaluating domain: %s",
-                e,
-            )
-            sql_query = "Invalid search term"
-            return sql_query, order_by_field
-
-        target_model_name = G2PTargetModelMapping.get_target_model_name(target_registry)
-
-        if not target_model_name:
-            _logger.error(
-                "Unknown target_registry '%s'",
-                target_registry,
-            )
-            sql_query = "Unknown target registry type"
-            return sql_query, order_by_field
-
-        target_model = self.env[target_model_name]
-
-        try:
-            query = target_model._where_calc(domain_value)
-        except Exception as e:
-            _logger.error(
-                "Error calculating where clause for rule: %s", e
-            )
-            sql_query = "Error calculating query"
-            return sql_query, order_by_field
-
-        try:
-            _, where_clause, where_clause_params = query.get_sql()
-        except Exception as e:
-            _logger.error(
-                "Error generating SQL from query: %s", e
-            )
-            sql_query = "Error generating SQL"
-            return sql_query, order_by_field
-
-        where_str = ("%s" % where_clause) if where_clause else ""
-        # Use the target model's table name in the SQL query.
-        query_str = (
-            where_str 
-        )
-        
-        # Format the parameters as strings.
-        formatted_params = list(
-            map(lambda x: "'" + str(x) + "'", where_clause_params)
-        )
-
-        try:
-            formatted_query = query_str % tuple(formatted_params)
-            # formatted_query = formatted_query.replace('"', '\\"')
-            sql_query = formatted_query
-            _logger.info("Query: %s", sql_query)
-        except Exception as e:
-            _logger.error(
-                "Error formatting query: %s",
-                e,
-            )
-            sql_query = "Error formatting query"
-        return sql_query, order_by_field
-
     @api.model
     def get_beneficiaries(self, wizard_id, page, page_size, odoo_domain):
         wizard = self.sudo().browse(wizard_id)
@@ -470,7 +399,6 @@ class G2PBGTaskSummaryWizard(models.TransientModel):
         if not api_url:
             _logger.error("API URL not set in environment")
 
-        sql_query, order_by_condition = self._build_sql_query(odoo_domain, wizard.target_registry)
         endpoint = f"{api_url}/search_beneficiaries"
 
         payload = BeneficiarySearchRequest(
@@ -484,8 +412,8 @@ class G2PBGTaskSummaryWizard(models.TransientModel):
                 pagination_request=G2PPaginationRequest(
                     current_page=page,
                     page_size=page_size,
-                    sort_by=order_by_condition or "internal_record_id asc",
-                    search_text=sql_query or "",
+                    sort_by="internal_record_id asc",
+                    search_text=odoo_domain or "",
                 ),
                 request_payload=BeneficiarySearchRequestPayload(
                     beneficiary_list_id=wizard.beneficiary_list_uuid,

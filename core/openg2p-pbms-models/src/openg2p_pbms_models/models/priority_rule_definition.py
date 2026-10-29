@@ -16,4 +16,3 @@ class G2PPriorityRuleDefinition(BaseORMModel):
     program_id = mapped_column(Integer, nullable=True)
     target_registry = mapped_column(String, nullable=False)
     pbms_domain = mapped_column(String, nullable=False)
-    sql_query = mapped_column(String, nullable=False)
