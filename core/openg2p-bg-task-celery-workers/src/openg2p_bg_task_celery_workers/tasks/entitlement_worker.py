@@ -29,14 +29,11 @@ def entitlement_worker(id: str):
     bg_task_session_maker = sessionmaker(
         bind=_engine.get("db_engine_bg_task"), expire_on_commit=False
     )
-    sr_session_maker = sessionmaker(
-        bind=_engine.get("db_engine_sr"), expire_on_commit=False
-    )
     pbms_session_maker = sessionmaker(
         bind=_engine.get("db_engine_pbms"), expire_on_commit=False
     )
 
-    with bg_task_session_maker() as bg_task_session, sr_session_maker() as sr_session, pbms_session_maker() as pbms_session:
+    with bg_task_session_maker() as bg_task_session, pbms_session_maker() as pbms_session:
         beneficiary_list_details = None
         try:
             beneficiary_list_details = (
@@ -69,90 +66,61 @@ def entitlement_worker(id: str):
                 .all()
             )
 
-            registrant_details: List[RegistrantDetails] = []
+            registrant_details: List[RegistrantDetails] = [
+                RegistrantDetails(**item)
+                for item in beneficiary_list_details.registrant_details
+            ]
+            registrant_ids = [item.registrant_id for item in registrant_details]
+            registry_interface: RegistryInterface = RegistryFactory.get_registry_class(
+                target_registry
+            )
 
-            for registrant_detail in beneficiary_list_details.registrant_details:
-                registrant_detail = RegistrantDetails(**registrant_detail)
-                _logger.debug(
-                    "Calculating entitlement(s) for registrant id: %s",
-                    registrant_detail.registrant_id,
+            for entitlement_rule_definition in entitlement_rule_definitions:
+                benefit_code_id = entitlement_rule_definition.benefit_code_id
+                program_benefit_code_max_quantity = (
+                    pbms_session.query(G2PProgramBenefitCodes.max_quantity)
+                    .filter(
+                        G2PProgramBenefitCodes.program_id == beneficiary_list.program_id,
+                        G2PProgramBenefitCodes.benefit_code_id == benefit_code_id,
+                    )
+                    .first()
                 )
-
-                for entitlement_rule_definition in entitlement_rule_definitions:
-                    benefit_code_id = entitlement_rule_definition.benefit_code_id
-                    program_benefit_code_max_quantity = (
-                        pbms_session.query(G2PProgramBenefitCodes.max_quantity)
-                        .filter(
-                            G2PProgramBenefitCodes.program_id
-                            == beneficiary_list.program_id,
-                            G2PProgramBenefitCodes.benefit_code_id == benefit_code_id,
-                        )
-                        .first()
-                    )
-                    max_quantity: float = (
-                        program_benefit_code_max_quantity[0]
-                        if program_benefit_code_max_quantity
-                        else 0
-                    )
+                max_quantity: float = (
+                    program_benefit_code_max_quantity[0]
+                    if program_benefit_code_max_quantity
+                    else 0
+                )
+                multipliers = registry_interface.entitlement_multipliers(
+                    registrant_ids,
+                    entitlement_rule_definition.pbms_domain,
+                    entitlement_rule_definition.multiplier,
+                )
+                for registrant_detail in registrant_details:
                     if (
                         registrant_detail.entitlement is not None
                         and benefit_code_id in registrant_detail.entitlement
-                        and registrant_detail.entitlement[benefit_code_id]
-                        == max_quantity
+                        and registrant_detail.entitlement[benefit_code_id] == max_quantity
                     ):
                         continue
-
+                    multiplier_value = multipliers.get(str(registrant_detail.registrant_id))
+                    is_registrant_entitled = multiplier_value is not None
+                    if not is_registrant_entitled:
+                        multiplier_value = 0
+                        calculated_entitlement = 0
                     else:
-                        try:
-                            registry_interface: RegistryInterface = (
-                                RegistryFactory.get_registry_class(
-                                    entitlement_rule_definition.target_registry
-                                )
-                            )
-                            is_registrant_entitled: bool = (
-                                registry_interface.get_is_registant_entitled(
-                                    registrant_detail.registrant_id,
-                                    entitlement_rule_definition.sql_query,
-                                    sr_session,
-                                )
-                            )
-                            calculated_entitlement = 0
-                            multiplier_value = 0
-                            if is_registrant_entitled:
-                                (
-                                    calculated_entitlement,
-                                    multiplier_value,
-                                ) = calculate_entitlement(
-                                    sr_session,
-                                    registrant_detail,
-                                    entitlement_rule_definition,
-                                    registry_interface,
-                                )
-                                _logger.debug(
-                                    "Calculated entitlement for registrant id %s: %s",
-                                    registrant_detail.registrant_id,
-                                    calculated_entitlement,
-                                )
-                            update_registrant_detail_json(
-                                registrant_detail,
-                                benefit_code_id,
-                                max_quantity,
-                                calculated_entitlement,
-                                entitlement_rule_definition.multiplier,
-                                multiplier_value,
-                                is_registrant_entitled,
-                            )
-
-                        except Exception as e:
-                            raise Exception(
-                                f"Error processing entitlement rule id {entitlement_rule_definition.id} for registrant id {registrant_detail.registrant_id} in request beneficiary list id {id}: {e}"
-                            ) from e
-
-                registrant_details.append(registrant_detail)
-
-                _logger.debug(
-                    f"Entitlement processed for registrant_id {registrant_detail.registrant_id}: {registrant_detail}"
-                )
+                        calculated_entitlement = round(
+                            multiplier_value * entitlement_rule_definition.quantity,
+                            entitlement_rule_definition.decimal_places,
+                        )
+                    update_registrant_detail_json(
+                        registrant_detail,
+                        benefit_code_id,
+                        max_quantity,
+                        calculated_entitlement,
+                        entitlement_rule_definition.multiplier,
+                        multiplier_value,
+                        is_registrant_entitled,
+                    )
 
             _logger.info(
                 "Updating beneficiary list details with calculated entitlements"
@@ -199,17 +167,15 @@ def entitlement_worker(id: str):
 
 
 def compute_entitlement_statistics(
-    id, bg_task_session, sr_session, beneficiary_list_details, target_registry
+    id, bg_task_session, beneficiary_list_details, target_registry
 ):
     try:
-        # Get the appropriate summary computation class
         registry_interface: RegistryInterface = RegistryFactory.get_registry_class(
             target_registry
         )
         registry_interface.compute_entitlement_statistics(
             beneficiary_list_details.beneficiary_list_id,
             bg_task_session,
-            sr_session,
         )
 
         _logger.info(
@@ -260,19 +226,3 @@ def update_registrant_detail_json(
         ] = multiplier_value
 
 
-def calculate_entitlement(
-    sr_session, registrant_detail, entitlement_rule_definition, registry_interface
-):
-    multiplier: float = 1.0
-    if entitlement_rule_definition.multiplier:
-        multiplier = registry_interface.get_entitlement_multiplier(
-            entitlement_rule_definition.multiplier,
-            registrant_detail.registrant_id,
-            sr_session,
-        )
-    calculated_entitlement = round(
-        multiplier * entitlement_rule_definition.quantity,
-        entitlement_rule_definition.decimal_places,
-    )
-
-    return calculated_entitlement, multiplier
