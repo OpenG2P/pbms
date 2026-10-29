@@ -1,2 +1,0 @@
-from .register_household import RegisterHousehold
-from .registry_farmer import RegistryFarmer

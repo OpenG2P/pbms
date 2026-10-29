@@ -1,8 +1,8 @@
 FROM python:3.12.11-alpine3.22
 
 # External OpenG2P library refs (not part of this repo). Override via build-arg /
-# workflow input. The PBMS API code + registry adapter extensions are installed
-# from LOCAL source (build context = repo root).
+# workflow input. The staff portal API is installed from local source.
+# pbms-connectors installs registry-adapters on top of this image.
 ARG FASTAPI_COMMON_REF=develop
 
 RUN apk add --no-cache --virtual .build-deps gcc libc-dev linux-headers make \
@@ -17,17 +17,15 @@ RUN pip install --no-cache-dir \
         "git+https://github.com/openg2p/openg2p-fastapi-common@${FASTAPI_COMMON_REF}#subdirectory=openg2p-fastapi-auth-models" \
  && pip install --no-cache-dir jinja2
 
-# Local source: PBMS + bg-task models, the staff portal API, and the registry
-# adapter extensions.
+# Local source: PBMS + bg-task models and the staff portal API.
+# Registry adapters are installed by the pbms-connectors image.
 COPY core/openg2p-pbms-models /src/openg2p-pbms-models
 COPY core/openg2p-bg-task-models /src/openg2p-bg-task-models
 COPY apis/openg2p-pbms-staff-portal-api /src/openg2p-pbms-staff-portal-api
-COPY extensions/openg2p-bg-task-registry-adapters /src/openg2p-bg-task-registry-adapters
 RUN pip install --no-cache-dir \
         /src/openg2p-pbms-models \
         /src/openg2p-bg-task-models \
-        /src/openg2p-pbms-staff-portal-api \
-        /src/openg2p-bg-task-registry-adapters
+        /src/openg2p-pbms-staff-portal-api
 
 RUN apk del --no-network .build-deps
 

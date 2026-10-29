@@ -20,7 +20,6 @@ RUN ln -s $(which python3) /usr/bin/python
 COPY odoo/g2p_pbms                 ${EXTRA_ADDONS_DIR}/pbms-core/g2p_pbms
 COPY odoo/g2p_pbms_program_access  ${EXTRA_ADDONS_DIR}/pbms-core/g2p_pbms_program_access
 COPY odoo/requirements.txt         ${EXTRA_ADDONS_DIR}/pbms-core/requirements.txt
-COPY odoo/extensions               ${EXTRA_ADDONS_DIR}/pbms-extensions
 COPY odoo/community-addons         ${EXTRA_ADDONS_DIR}/community-addons
 
 # External OpenG2P Odoo commons, baked in at build time.
