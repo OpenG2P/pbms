@@ -1,6 +1,6 @@
 apiVersion: v2
-name: openg2p-pbms
-description: Helm chart for OpenG2P PBMS
+name: openg2p-pbms-platform
+description: Helm chart for the OpenG2P PBMS platform. Templates and base images. Install openg2p-pbms, which depends on this chart.
 type: application
 # Version handling:
 #   This `version` is a STATIC placeholder — NOT the published version. The
@@ -27,5 +27,4 @@ dependencies:
   condition: redis.enabled
 icon: https://openg2p.github.io/openg2p-helm/openg2p-logo.png
 annotations:
-  catalog.cattle.io/display-name: "OpenG2P PBMS"
-  openg2p.org/add-to-rancher: ""
+  catalog.cattle.io/display-name: "OpenG2P PBMS Platform"

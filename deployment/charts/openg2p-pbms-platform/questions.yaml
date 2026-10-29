@@ -26,7 +26,7 @@ questions:
 
 # Odoo Settings
 - variable: odoo.image.tag
-  description: Image tag (version) for the Odoo (core) image
+  description: Image tag (version) for the Odoo base image
   type: string
   label: Odoo Image Tag
   group: Odoo Settings
@@ -112,29 +112,99 @@ questions:
   show_if: "benePortalApi.enabled=true"
 
 # Registry settings
+- variable: global.registryConnector
+  description: How PBMS reads the registry. db queries the registry database. dci calls the registry partner API POST /dci/sync/search.
+  type: enum
+  options:
+    - db
+    - dci
+  default: db
+  label: Registry Connector
+  group: Registry
+
 - variable: global.registryDB
-  description: Name of the Registry DB in PostgreSQL
+  description: Name of the Registry DB in PostgreSQL. Used when the connector is db.
   type: string
   label: Registry DB
   group: Registry
+  show_if: "global.registryConnector=db"
 
 - variable: global.registryDBUser
-  description: Name of the Registry DB User in PostgreSQL
+  description: Name of the Registry DB User in PostgreSQL. Used when the connector is db.
   type: string
   label: Registry DB User
   group: Registry
+  show_if: "global.registryConnector=db"
 
 - variable: global.registryDBSecret
-  description: Name of the Registry DB Secret that contains user password
+  description: Name of the Registry DB Secret that contains the user password. Used when the connector is db.
   type: string
   label: Registry DB Secret with User Password
   group: Registry
+  show_if: "global.registryConnector=db"
 
 - variable: global.registryDBUserPasswordKey
-  description: Name of the Registry DB Secret key that contains user password
+  description: Key inside the Registry DB Secret that contains the user password. Used when the connector is db.
   type: string
   label: Registry DB Secret Key with User Password
   group: Registry
+  show_if: "global.registryConnector=db"
+
+- variable: global.registryPartnerApiUrl
+  description: Origin of the registry partner API, with no path. PBMS calls {url}/dci/sync/search. Used when the connector is dci.
+  type: string
+  default: http://registry-partner-api
+  label: Registry Partner API URL
+  group: Registry
+  show_if: "global.registryConnector=dci"
+
+- variable: global.registryPartnerApiTimeout
+  description: Seconds to wait for one registry partner API call. Used when the connector is dci.
+  type: int
+  default: 30
+  label: Registry Partner API Timeout
+  group: Registry
+  show_if: "global.registryConnector=dci"
+
+- variable: global.registryPartnerApiSslVerify
+  description: Verify the registry partner API TLS certificate. Used when the connector is dci.
+  type: boolean
+  default: true
+  label: Registry Partner API TLS Verify
+  group: Registry
+  show_if: "global.registryConnector=dci"
+
+- variable: global.farmerRegType
+  description: DCI search reg_type for farmers. Must match the register mnemonic on the registry.
+  type: string
+  default: Farmer
+  label: Farmer Register Type
+  group: Registry
+  show_if: "global.registryConnector=dci"
+
+- variable: global.householdRegType
+  description: DCI search reg_type for households. Must match the register mnemonic on the registry.
+  type: string
+  default: Household
+  label: Household Register Type
+  group: Registry
+  show_if: "global.registryConnector=dci"
+
+- variable: global.farmerRegRecordType
+  description: DCI reg_record_type sent with a farmer search.
+  type: string
+  default: Farmer
+  label: Farmer Record Type
+  group: Registry
+  show_if: "global.registryConnector=dci"
+
+- variable: global.householdRegRecordType
+  description: DCI reg_record_type sent with a household search.
+  type: string
+  default: Household
+  label: Household Record Type
+  group: Registry
+  show_if: "global.registryConnector=dci"
 
 
 

@@ -32,6 +32,15 @@ global:
   registryDBUser: 'registry_user'
   registryDBSecret: 'registry'
   registryDBUserPasswordKey: 'registry-db-user'
+  # db uses the registry database. dci calls the registry partner API.
+  registryConnector: db
+  registryPartnerApiUrl: http://registry-partner-api
+  registryPartnerApiTimeout: 30
+  registryPartnerApiSslVerify: true
+  farmerRegType: Farmer
+  householdRegType: Household
+  farmerRegRecordType: Farmer
+  householdRegRecordType: Household
 
   mailInstallationName: commons-mail
 
@@ -85,7 +94,7 @@ odoo:
   extraAddonsUrlsToPull: ''
 
   image:
-    repository: openg2p/openg2p-pbms-core
+    repository: openg2p/openg2p-pbms-odoo-base
     tag: "develop"
     pullPolicy: Always
 
@@ -170,7 +179,7 @@ beatProducers:
     name: ""
 
   image:
-    repository: openg2p/openg2p-pbms-bg-task-celery-beat-producers
+    repository: openg2p/openg2p-pbms-celery-base
     tag: "develop"
     pullPolicy: Always
 
@@ -213,12 +222,6 @@ beatProducers:
     BG_TASK_CELERY_BEAT_DB_DBNAME: '{{ tpl .Values.global.pbmsBgTaskDB $ }}'
     BG_TASK_CELERY_BEAT_DB_USERNAME: '{{ tpl .Values.global.pbmsBgTaskDBUser $ }}'
 
-    # Social Registry Database
-    BG_TASK_CELERY_BEAT_DB_HOSTNAME_SR: '{{ tpl .Values.global.postgresqlHost $ }}'
-    BG_TASK_CELERY_BEAT_DB_PORT_SR: 5432
-    BG_TASK_CELERY_BEAT_DB_DBNAME_SR: '{{ tpl .Values.global.registryDB $ }}'
-    BG_TASK_CELERY_BEAT_DB_USERNAME_SR: '{{ tpl .Values.global.registryDBUser $ }}'
-
     # PBMS Database
     BG_TASK_CELERY_BEAT_DB_USERNAME_PBMS:  '{{ tpl .Values.global.pbmsDBUser $ }}'
     BG_TASK_CELERY_BEAT_DB_HOSTNAME_PBMS: '{{ tpl .Values.global.postgresqlHost $ }}'
@@ -227,16 +230,14 @@ beatProducers:
 
     BG_TASK_CELERY_BEAT_CELERY_BROKER_URL: redis://{{ tpl .Values.global.redisInstallationName $ }}:6379/0
     BG_TASK_CELERY_BEAT_CELERY_BACKEND_URL: redis://{{ tpl .Values.global.redisInstallationName $ }}:6379/0
+    CELERY_APP: openg2p_bg_task_celery_beat_producers.main.celery_app
+    CELERY_OPTS: worker --beat -Q celery --loglevel=info --schedule=/tmp/celery-beat-schedule.db
 
   envVarsFrom:
     BG_TASK_CELERY_BEAT_DB_PASSWORD:
       secretKeyRef:
         name: '{{ tpl .Values.global.pbmsBgTaskDBSecret $ }}'
         key: '{{ tpl .Values.global.pbmsBgTaskDBUserPasswordKey $ }}'
-    BG_TASK_CELERY_BEAT_DB_PASSWORD_SR:
-      secretKeyRef:
-        name: '{{ tpl .Values.global.registryDBSecret $ }}'
-        key: '{{ tpl .Values.global.registryDBUserPasswordKey $ }}'
     BG_TASK_CELERY_BEAT_DB_PASSWORD_PBMS :
       secretKeyRef:
         name: '{{ tpl .Values.global.pbmsDBSecret $ }}'
@@ -334,7 +335,7 @@ celeryWorkers:
     name: ""
 
   image:
-    repository: openg2p/openg2p-pbms-bg-task-celery-workers
+    repository: openg2p/openg2p-pbms-celery-base
     tag: "develop"
     pullPolicy: Always
 
@@ -371,6 +372,8 @@ celeryWorkers:
     BG_TASK_CELERY_WORKERS_G2P_BRIDGE_BASE_URL: "http://g2p-bridge-api"
     BG_TASK_CELERY_WORKERS_CELERY_BROKER_URL: "redis://{{ tpl .Values.global.redisInstallationName $ }}:6379/0"
     BG_TASK_CELERY_WORKERS_CELERY_BACKEND_URL: "redis://{{ tpl .Values.global.redisInstallationName $ }}:6379/0"
+    CELERY_APP: openg2p_bg_task_celery_workers.main.celery_app
+    CELERY_OPTS: worker -Q bg_task_worker_queue --loglevel=info
 
     BG_TASK_CELERY_WORKERS_BATCH_SIZE: 500
 
@@ -380,11 +383,20 @@ celeryWorkers:
     BG_TASK_CELERY_WORKERS_DB_DBNAME: '{{ tpl .Values.global.pbmsBgTaskDB $ }}'
     BG_TASK_CELERY_WORKERS_DB_USERNAME: '{{ tpl .Values.global.pbmsBgTaskDBUser $ }}'
 
-    # Social Registry Database
-    BG_TASK_CELERY_WORKERS_DB_HOSTNAME_SR: '{{ tpl .Values.global.postgresqlHost $ }}'
-    BG_TASK_CELERY_WORKERS_DB_PORT_SR: 5432
-    BG_TASK_CELERY_WORKERS_DB_DBNAME_SR: '{{ tpl .Values.global.registryDB $ }}'
-    BG_TASK_CELERY_WORKERS_DB_USERNAME_SR: '{{ tpl .Values.global.registryDBUser $ }}'
+    # Registry adapter (db session or DCI partner API). Same values on the staff API.
+    REGISTRY_ADAPTERS_CONNECTOR: '{{ tpl .Values.global.registryConnector $ }}'
+    REGISTRY_ADAPTERS_DB_DRIVER: postgresql
+    REGISTRY_ADAPTERS_DB_HOSTNAME: '{{ tpl .Values.global.postgresqlHost $ }}'
+    REGISTRY_ADAPTERS_DB_PORT: 5432
+    REGISTRY_ADAPTERS_DB_DBNAME: '{{ tpl .Values.global.registryDB $ }}'
+    REGISTRY_ADAPTERS_DB_USERNAME: '{{ tpl .Values.global.registryDBUser $ }}'
+    REGISTRY_ADAPTERS_PARTNER_API_URL: '{{ tpl .Values.global.registryPartnerApiUrl $ }}'
+    REGISTRY_ADAPTERS_PARTNER_API_TIMEOUT: '{{ .Values.global.registryPartnerApiTimeout }}'
+    REGISTRY_ADAPTERS_PARTNER_API_SSL_VERIFY: '{{ .Values.global.registryPartnerApiSslVerify }}'
+    REGISTRY_ADAPTERS_FARMER_REG_TYPE: '{{ tpl .Values.global.farmerRegType $ }}'
+    REGISTRY_ADAPTERS_HOUSEHOLD_REG_TYPE: '{{ tpl .Values.global.householdRegType $ }}'
+    REGISTRY_ADAPTERS_FARMER_REG_RECORD_TYPE: '{{ tpl .Values.global.farmerRegRecordType $ }}'
+    REGISTRY_ADAPTERS_HOUSEHOLD_REG_RECORD_TYPE: '{{ tpl .Values.global.householdRegRecordType $ }}'
 
     # PBMS Database
     BG_TASK_CELERY_WORKERS_DB_HOSTNAME_PBMS: '{{ tpl .Values.global.postgresqlHost $ }}'
@@ -417,7 +429,7 @@ celeryWorkers:
       secretKeyRef:
         name: '{{ tpl .Values.global.pbmsBgTaskDBSecret $ }}'
         key: '{{ tpl .Values.global.pbmsBgTaskDBUserPasswordKey $ }}'
-    BG_TASK_CELERY_WORKERS_DB_PASSWORD_SR:
+    REGISTRY_ADAPTERS_DB_PASSWORD:
       secretKeyRef:
         name: '{{ tpl .Values.global.registryDBSecret $ }}'
         key: '{{ tpl .Values.global.registryDBUserPasswordKey $ }}'
@@ -503,7 +515,7 @@ staffPortalApi:
     name: ""
 
   image:
-    repository: openg2p/openg2p-pbms-staff-portal-api
+    repository: openg2p/openg2p-pbms-staff-api-base
     tag: "develop"
     pullPolicy: Always
 
@@ -534,10 +546,19 @@ staffPortalApi:
     runAsNonRoot: true
 
   envVars:
-    STAFF_PORTAL_API_DB_USERNAME_SR: '{{ tpl .Values.global.registryDBUser $ }}'
-    STAFF_PORTAL_API_DB_HOSTNAME_SR: '{{ tpl .Values.global.postgresqlHost $ }}'
-    STAFF_PORTAL_API_DB_PORT_SR: 5432
-    STAFF_PORTAL_API_DB_DBNAME_SR: '{{ tpl .Values.global.registryDB $ }}'
+    REGISTRY_ADAPTERS_CONNECTOR: '{{ tpl .Values.global.registryConnector $ }}'
+    REGISTRY_ADAPTERS_DB_DRIVER: postgresql
+    REGISTRY_ADAPTERS_DB_HOSTNAME: '{{ tpl .Values.global.postgresqlHost $ }}'
+    REGISTRY_ADAPTERS_DB_PORT: 5432
+    REGISTRY_ADAPTERS_DB_DBNAME: '{{ tpl .Values.global.registryDB $ }}'
+    REGISTRY_ADAPTERS_DB_USERNAME: '{{ tpl .Values.global.registryDBUser $ }}'
+    REGISTRY_ADAPTERS_PARTNER_API_URL: '{{ tpl .Values.global.registryPartnerApiUrl $ }}'
+    REGISTRY_ADAPTERS_PARTNER_API_TIMEOUT: '{{ .Values.global.registryPartnerApiTimeout }}'
+    REGISTRY_ADAPTERS_PARTNER_API_SSL_VERIFY: '{{ .Values.global.registryPartnerApiSslVerify }}'
+    REGISTRY_ADAPTERS_FARMER_REG_TYPE: '{{ tpl .Values.global.farmerRegType $ }}'
+    REGISTRY_ADAPTERS_HOUSEHOLD_REG_TYPE: '{{ tpl .Values.global.householdRegType $ }}'
+    REGISTRY_ADAPTERS_FARMER_REG_RECORD_TYPE: '{{ tpl .Values.global.farmerRegRecordType $ }}'
+    REGISTRY_ADAPTERS_HOUSEHOLD_REG_RECORD_TYPE: '{{ tpl .Values.global.householdRegRecordType $ }}'
 
     STAFF_PORTAL_API_OPENAPI_ROOT_PATH: "/"
 
@@ -551,7 +572,7 @@ staffPortalApi:
       secretKeyRef:
         name: '{{ tpl .Values.global.pbmsBgTaskDBSecret $ }}'
         key:  '{{ tpl .Values.global.pbmsBgTaskDBUserPasswordKey $ }}'
-    STAFF_PORTAL_API_DB_PASSWORD_SR:
+    REGISTRY_ADAPTERS_DB_PASSWORD:
       secretKeyRef:
         name: '{{ tpl .Values.global.registryDBSecret $ }}'
         key: '{{ tpl .Values.global.registryDBUserPasswordKey $ }}'
@@ -667,7 +688,7 @@ benePortalApi:
     name: ""
 
   image:
-    repository: openg2p/openg2p-pbms-bene-portal-api
+    repository: openg2p/openg2p-pbms-beneficiary-api
     tag: "develop"
     pullPolicy: Always
 
