@@ -27,14 +27,11 @@ def entitlement_summary_worker(id: int):
     bg_task_session_maker = sessionmaker(
         bind=_engine.get("db_engine_bg_task"), expire_on_commit=False
     )
-    sr_session_maker = sessionmaker(
-        bind=_engine.get("db_engine_sr"), expire_on_commit=False
-    )
     pbms_session_maker = sessionmaker(
         bind=_engine.get("db_engine_pbms"), expire_on_commit=False
     )
 
-    with bg_task_session_maker() as bg_task_session, sr_session_maker() as sr_session, pbms_session_maker() as pbms_session:
+    with bg_task_session_maker() as bg_task_session, pbms_session_maker() as pbms_session:
         beneficiary_list = None
         try:
             beneficiary_list: G2PBeneficiaryList = (
@@ -57,7 +54,6 @@ def entitlement_summary_worker(id: int):
                 registry_interface.compute_entitlement_statistics(
                     beneficiary_list.beneficiary_list_id,
                     bg_task_session,
-                    sr_session,
                 )
 
                 _logger.info(

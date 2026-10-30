@@ -20,13 +20,6 @@ class Settings(BaseSettings):
     # DB Driver Overwrite
     db_driver: str = "postgresql"
 
-    # Social Registry Database
-    db_username_sr: str = "postgres"
-    db_password_sr: str = "postgres"
-    db_hostname_sr: str = "localhost"
-    db_port_sr: int = 5432
-    db_dbname_sr: str = "socialregistrydb"
-
     # PBMS Database
     db_username_pbms: str = "postgres"
     db_password_pbms: str = "postgres"

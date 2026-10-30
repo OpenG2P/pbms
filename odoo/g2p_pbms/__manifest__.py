@@ -1,3 +1,4 @@
+# ruff: noqa: B018
 {
     "name": "PBMS",
     "version": "3.1.0",

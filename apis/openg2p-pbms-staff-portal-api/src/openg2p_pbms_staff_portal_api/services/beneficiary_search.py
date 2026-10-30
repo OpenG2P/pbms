@@ -38,11 +38,8 @@ class BeneficiarySearchService(BaseService):
         session_maker = async_sessionmaker(
             bind=_engine.get("db_engine_bg_task"), expire_on_commit=False
         )
-        sr_session_maker = async_sessionmaker(
-            bind=_engine.get("db_engine_sr"), expire_on_commit=False
-        )
 
-        async with session_maker() as session, sr_session_maker() as sr_session:
+        async with session_maker() as session:
             try:
                 registry_interface: RegistryInterface = (
                     RegistryFactory.get_registry_class(
@@ -54,7 +51,6 @@ class BeneficiarySearchService(BaseService):
                     total_count,
                 ) = await registry_interface.search_beneficiaries(
                     session,
-                    sr_session,
                     beneficiary_search_request_payload.beneficiary_list_id,
                     beneficiary_search_request_payload.target_registry,
                     pagination_request.search_text,

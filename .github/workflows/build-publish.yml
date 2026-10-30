@@ -28,13 +28,13 @@ jobs:
       images: |
         [
           {
-            "name": "openg2p-pbms-core",
-            "repo": "openg2p/openg2p-pbms-core",
+            "name": "openg2p-pbms-odoo-base",
+            "repo": "openg2p/openg2p-pbms-odoo-base",
             "dockerfile": "docker/openg2p-pbms-odoo/utils/Dockerfile"
           },
           {
-            "name": "openg2p-pbms-staff-portal-api",
-            "repo": "openg2p/openg2p-pbms-staff-portal-api",
+            "name": "openg2p-pbms-staff-api-base",
+            "repo": "openg2p/openg2p-pbms-staff-api-base",
             "dockerfile": "docker/openg2p-pbms-apis/staff-portal-api/Dockerfile",
             "pins": [
               {
@@ -45,8 +45,8 @@ jobs:
             ]
           },
           {
-            "name": "openg2p-pbms-bene-portal-api",
-            "repo": "openg2p/openg2p-pbms-bene-portal-api",
+            "name": "openg2p-pbms-beneficiary-api",
+            "repo": "openg2p/openg2p-pbms-beneficiary-api",
             "dockerfile": "docker/openg2p-pbms-apis/bene-portal-api/Dockerfile",
             "pins": [
               {
@@ -57,9 +57,9 @@ jobs:
             ]
           },
           {
-            "name": "openg2p-pbms-bg-task-celery-workers",
-            "repo": "openg2p/openg2p-pbms-bg-task-celery-workers",
-            "dockerfile": "docker/openg2p-pbms-bg-tasks/bg-task-celery-worker/Dockerfile",
+            "name": "openg2p-pbms-celery-base",
+            "repo": "openg2p/openg2p-pbms-celery-base",
+            "dockerfile": "docker/openg2p-pbms-bg-tasks/celery/Dockerfile",
             "pins": [
               {
                 "arg": "FASTAPI_COMMON_REF",
@@ -72,25 +72,13 @@ jobs:
                 "ref": "develop"
               }
             ]
-          },
-          {
-            "name": "openg2p-pbms-bg-task-celery-beat-producers",
-            "repo": "openg2p/openg2p-pbms-bg-task-celery-beat-producers",
-            "dockerfile": "docker/openg2p-pbms-bg-tasks/bg-task-celery-beat/Dockerfile",
-            "pins": [
-              {
-                "arg": "FASTAPI_COMMON_REF",
-                "repo": "https://github.com/openg2p/openg2p-fastapi-common",
-                "ref": "develop"
-              }
-            ]
           }
         ]
 
-      chart-path: deployment/charts/openg2p-pbms
+      chart-path: deployment/charts/openg2p-pbms-platform
 
       chart-image-paths: |
-        [".odoo.image.tag",".staffPortalApi.image.tag",".benePortalApi.image.tag",".celeryWorkers.image.tag",".beatProducers.image.tag"]
+        [".odoo.image.tag",".celeryWorkers.image.tag",".beatProducers.image.tag",".staffPortalApi.image.tag",".benePortalApi.image.tag"]
 
       packaging-ref: v1
 

@@ -1,10 +1,6 @@
 from odoo import models, fields, api
-from odoo.tools.safe_eval import safe_eval
 
-import logging
-from odoo.addons.g2p_registry_type_addon.models import G2PRegistryType, G2PTargetModelMapping
-
-_logger = logging.getLogger(__name__)
+from odoo.addons.g2p_registry_type_addon.models import G2PRegistryType
 
 
 class G2PEligibilityRuleDefinition(models.Model):
@@ -37,7 +33,6 @@ class G2PEligibilityRuleDefinition(models.Model):
         required=True
     )
     pbms_domain = fields.Char(string="Domain", required=True)
-    sql_query = fields.Char(string="SQL Query", compute="_get_query", store=True)
 
     _sql_constraints = [
         ('rule_number_program_id_unique', 'unique(rule_number, program_id)', 'Rule Number must be unique per Program.')
@@ -49,75 +44,6 @@ class G2PEligibilityRuleDefinition(models.Model):
         program_id = self.env.context.get('default_program_id')
         last = self.search([('program_id', '=', program_id)], order='rule_number desc', limit=1)
         return last.rule_number + 1 if last else 1
-
-    @api.depends("pbms_domain", "target_registry")
-    def _get_query(self):
-        for rec in self:
-            try:
-                # Convert the domain string into a valid Python list of tuples.
-                domain_value = safe_eval(rec.pbms_domain or "[]")
-            except Exception as e:
-                _logger.error(
-                    "Error evaluating domain for eligibility rule %s: %s",
-                    rec.mnemonic,
-                    e,
-                )
-                rec.sql_query = "Invalid domain"
-                continue
-
-            target_model_name = G2PTargetModelMapping.get_target_model_name(rec.target_registry)
-            if not target_model_name:
-                _logger.error(
-                    "Unknown target_registry '%s' for rule %s",
-                    rec.target_registry,
-                    rec.mnemonic,
-                )
-                rec.sql_query = "Unknown target registry type"
-                continue
-
-            # Get the target model's recordset.
-            target_model = self.env[target_model_name]
-
-            try:
-                # Calculate the where clause for the target model based on the evaluated domain.
-                query = target_model._where_calc(domain_value)
-            except Exception as e:
-                _logger.error(
-                    "Error calculating where clause for rule %s: %s", rec.mnemonic, e
-                )
-                rec.sql_query = "Error calculating query"
-                continue
-
-            try:
-                from_clause, where_clause, where_clause_params = query.get_sql()
-            except Exception as e:
-                _logger.error(
-                    "Error generating SQL from query for rule %s: %s", rec.mnemonic, e
-                )
-                rec.sql_query = "Error generating SQL"
-                continue
-
-            where_str = (" WHERE %s" % where_clause) if where_clause else ""
-            # Use the target model's table name in the SQL query.
-            query_str = (
-                'SELECT "%s".internal_record_id FROM ' % target_model._table + from_clause + where_str
-            )
-
-            # Format the parameters as strings.
-            formatted_params = list(
-                map(lambda x: "'" + str(x) + "'", where_clause_params)
-            )
-
-            try:
-                rec.sql_query = query_str % tuple(formatted_params)
-                _logger.info("Query for rule %s: %s", rec.mnemonic, rec.sql_query)
-            except Exception as e:
-                _logger.error(
-                    "Error formatting query for eligibility rule %s: %s",
-                    rec.mnemonic,
-                    e,
-                )
-                rec.sql_query = "Error formatting query"
 
     def action_open_view(self):
         return {

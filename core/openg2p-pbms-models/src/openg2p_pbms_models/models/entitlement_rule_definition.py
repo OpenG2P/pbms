@@ -20,7 +20,6 @@ class G2PEntitlementRuleDefinition(BaseORMModel):
     decimal_places = mapped_column(Integer, nullable=True)
     multiplier = mapped_column(String, nullable=True)
     pbms_domain = mapped_column(String, nullable=False)
-    sql_query = mapped_column(String, nullable=False)
     create_date = mapped_column(
         String, nullable=True
     )  # Should be DateTime, but using String for "timestamp without time zone"

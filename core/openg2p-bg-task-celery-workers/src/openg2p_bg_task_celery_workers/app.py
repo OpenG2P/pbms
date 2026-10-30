@@ -44,14 +44,6 @@ def construct_db_datasource(
 
 def get_engine():
     if _config.db_datasource:
-        db_datasource_sr = construct_db_datasource(
-            _config.db_driver,
-            _config.db_username_sr,
-            _config.db_password_sr,
-            _config.db_hostname_sr,
-            _config.db_port_sr,
-            _config.db_dbname_sr,
-        )
         db_datasource_pbms = construct_db_datasource(
             _config.db_driver,
             _config.db_username_pbms,
@@ -69,14 +61,12 @@ def get_engine():
             _config.db_dbname_async,
         )
         db_engine_bg_task = create_engine(_config.db_datasource, poolclass=NullPool)
-        db_engine_sr = create_engine(db_datasource_sr, poolclass=NullPool)
         db_engine_pbms = create_engine(db_datasource_pbms, poolclass=NullPool)
         db_engine_bg_task_async = create_async_engine(
             db_datasource_bg_task_async, poolclass=NullPool
         )
         return {
             "db_engine_bg_task": db_engine_bg_task,
-            "db_engine_sr": db_engine_sr,
             "db_engine_pbms": db_engine_pbms,
             "db_engine_bg_task_async": db_engine_bg_task_async,
         }

@@ -1,3 +1,4 @@
+# ruff: noqa: B018
 {
     "name": "PBMS Program Access",
     "version": "3.1.0",

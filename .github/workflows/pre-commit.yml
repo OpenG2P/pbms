@@ -18,7 +18,6 @@ jobs:
       matrix:
         project:
           - core
-          - extensions
           - apis
           - docker
           - deployment
