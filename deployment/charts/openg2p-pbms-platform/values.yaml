@@ -23,25 +23,6 @@ global:
   # Note underscore doesn't work here for Kubernetes secret, hence hyphen in the name
   pbmsBgTaskDBSecret: '{{ .Release.Name }}-bgtask'
   pbmsBgTaskDBUserPasswordKey: '{{ .Release.Name }}-bgtask-db-user'
-
-  # Social Registry (NSR) DB that PBMS reads. Defaults match what openg2p-nsr
-  # provisions when installed with release name 'registry' (its DB/user/secret
-  # are derived from the release name). Override via questions.yaml if NSR was
-  # installed under a different release name.
-  registryDB: 'registry'
-  registryDBUser: 'registry_user'
-  registryDBSecret: 'registry'
-  registryDBUserPasswordKey: 'registry-db-user'
-  # db uses the registry database. dci calls the registry partner API.
-  registryConnector: db
-  registryPartnerApiUrl: http://registry-partner-api
-  registryPartnerApiTimeout: 30
-  registryPartnerApiSslVerify: true
-  farmerRegType: Farmer
-  householdRegType: Household
-  farmerRegRecordType: Farmer
-  householdRegRecordType: Household
-
   mailInstallationName: commons-mail
 
   sysAdminEmail: admin@openg2p.sandbox.net
@@ -383,21 +364,6 @@ celeryWorkers:
     BG_TASK_CELERY_WORKERS_DB_DBNAME: '{{ tpl .Values.global.pbmsBgTaskDB $ }}'
     BG_TASK_CELERY_WORKERS_DB_USERNAME: '{{ tpl .Values.global.pbmsBgTaskDBUser $ }}'
 
-    # Registry adapter (db session or DCI partner API). Same values on the staff API.
-    REGISTRY_ADAPTERS_CONNECTOR: '{{ tpl .Values.global.registryConnector $ }}'
-    REGISTRY_ADAPTERS_DB_DRIVER: postgresql
-    REGISTRY_ADAPTERS_DB_HOSTNAME: '{{ tpl .Values.global.postgresqlHost $ }}'
-    REGISTRY_ADAPTERS_DB_PORT: 5432
-    REGISTRY_ADAPTERS_DB_DBNAME: '{{ tpl .Values.global.registryDB $ }}'
-    REGISTRY_ADAPTERS_DB_USERNAME: '{{ tpl .Values.global.registryDBUser $ }}'
-    REGISTRY_ADAPTERS_PARTNER_API_URL: '{{ tpl .Values.global.registryPartnerApiUrl $ }}'
-    REGISTRY_ADAPTERS_PARTNER_API_TIMEOUT: '{{ .Values.global.registryPartnerApiTimeout }}'
-    REGISTRY_ADAPTERS_PARTNER_API_SSL_VERIFY: '{{ .Values.global.registryPartnerApiSslVerify }}'
-    REGISTRY_ADAPTERS_FARMER_REG_TYPE: '{{ tpl .Values.global.farmerRegType $ }}'
-    REGISTRY_ADAPTERS_HOUSEHOLD_REG_TYPE: '{{ tpl .Values.global.householdRegType $ }}'
-    REGISTRY_ADAPTERS_FARMER_REG_RECORD_TYPE: '{{ tpl .Values.global.farmerRegRecordType $ }}'
-    REGISTRY_ADAPTERS_HOUSEHOLD_REG_RECORD_TYPE: '{{ tpl .Values.global.householdRegRecordType $ }}'
-
     # PBMS Database
     BG_TASK_CELERY_WORKERS_DB_HOSTNAME_PBMS: '{{ tpl .Values.global.postgresqlHost $ }}'
     BG_TASK_CELERY_WORKERS_DB_PORT_PBMS: 5432
@@ -429,10 +395,6 @@ celeryWorkers:
       secretKeyRef:
         name: '{{ tpl .Values.global.pbmsBgTaskDBSecret $ }}'
         key: '{{ tpl .Values.global.pbmsBgTaskDBUserPasswordKey $ }}'
-    REGISTRY_ADAPTERS_DB_PASSWORD:
-      secretKeyRef:
-        name: '{{ tpl .Values.global.registryDBSecret $ }}'
-        key: '{{ tpl .Values.global.registryDBUserPasswordKey $ }}'
     BG_TASK_CELERY_WORKERS_DB_PASSWORD_PBMS:
       secretKeyRef:
         name: '{{ tpl .Values.global.pbmsDBSecret $ }}'
@@ -546,20 +508,6 @@ staffPortalApi:
     runAsNonRoot: true
 
   envVars:
-    REGISTRY_ADAPTERS_CONNECTOR: '{{ tpl .Values.global.registryConnector $ }}'
-    REGISTRY_ADAPTERS_DB_DRIVER: postgresql
-    REGISTRY_ADAPTERS_DB_HOSTNAME: '{{ tpl .Values.global.postgresqlHost $ }}'
-    REGISTRY_ADAPTERS_DB_PORT: 5432
-    REGISTRY_ADAPTERS_DB_DBNAME: '{{ tpl .Values.global.registryDB $ }}'
-    REGISTRY_ADAPTERS_DB_USERNAME: '{{ tpl .Values.global.registryDBUser $ }}'
-    REGISTRY_ADAPTERS_PARTNER_API_URL: '{{ tpl .Values.global.registryPartnerApiUrl $ }}'
-    REGISTRY_ADAPTERS_PARTNER_API_TIMEOUT: '{{ .Values.global.registryPartnerApiTimeout }}'
-    REGISTRY_ADAPTERS_PARTNER_API_SSL_VERIFY: '{{ .Values.global.registryPartnerApiSslVerify }}'
-    REGISTRY_ADAPTERS_FARMER_REG_TYPE: '{{ tpl .Values.global.farmerRegType $ }}'
-    REGISTRY_ADAPTERS_HOUSEHOLD_REG_TYPE: '{{ tpl .Values.global.householdRegType $ }}'
-    REGISTRY_ADAPTERS_FARMER_REG_RECORD_TYPE: '{{ tpl .Values.global.farmerRegRecordType $ }}'
-    REGISTRY_ADAPTERS_HOUSEHOLD_REG_RECORD_TYPE: '{{ tpl .Values.global.householdRegRecordType $ }}'
-
     STAFF_PORTAL_API_OPENAPI_ROOT_PATH: "/"
 
     STAFF_PORTAL_API_DB_HOSTNAME: '{{ tpl .Values.global.postgresqlHost $ }}'
@@ -572,10 +520,6 @@ staffPortalApi:
       secretKeyRef:
         name: '{{ tpl .Values.global.pbmsBgTaskDBSecret $ }}'
         key:  '{{ tpl .Values.global.pbmsBgTaskDBUserPasswordKey $ }}'
-    REGISTRY_ADAPTERS_DB_PASSWORD:
-      secretKeyRef:
-        name: '{{ tpl .Values.global.registryDBSecret $ }}'
-        key: '{{ tpl .Values.global.registryDBUserPasswordKey $ }}'
 
   resources: {}
 
