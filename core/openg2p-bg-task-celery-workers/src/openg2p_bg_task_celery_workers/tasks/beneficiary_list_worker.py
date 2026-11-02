@@ -53,7 +53,9 @@ def beneficiary_list_worker(id: int):
             registry: RegistryInterface = RegistryFactory.get_registry_class(
                 g2p_program_definition.target_registry
             )
-            enrollment_rules = _enrollment_rules(pbms_session, beneficiary_list.program_id)
+            enrollment_rules = _enrollment_rules(
+                pbms_session, beneficiary_list.program_id
+            )
 
             if beneficiary_list.list_stage == ListStageEnum.ENROLLMENT.value:
                 id_batches = registry.iter_eligible_ids(
@@ -90,7 +92,8 @@ def beneficiary_list_worker(id: int):
                         beneficiary_list_id=beneficiary_list.beneficiary_list_id,
                         registrant_details=registrant_details,
                         entitlement_process_status=StatusEnum.pending.value
-                        if beneficiary_list.list_stage == ListStageEnum.DISBURSEMENT.value
+                        if beneficiary_list.list_stage
+                        == ListStageEnum.DISBURSEMENT.value
                         else StatusEnum.not_applicable.value,
                         number_of_registrants=len(registrant_ids),
                     )

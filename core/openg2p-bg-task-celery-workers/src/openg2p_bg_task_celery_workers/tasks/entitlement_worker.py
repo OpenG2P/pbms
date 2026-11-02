@@ -80,7 +80,8 @@ def entitlement_worker(id: str):
                 program_benefit_code_max_quantity = (
                     pbms_session.query(G2PProgramBenefitCodes.max_quantity)
                     .filter(
-                        G2PProgramBenefitCodes.program_id == beneficiary_list.program_id,
+                        G2PProgramBenefitCodes.program_id
+                        == beneficiary_list.program_id,
                         G2PProgramBenefitCodes.benefit_code_id == benefit_code_id,
                     )
                     .first()
@@ -99,10 +100,13 @@ def entitlement_worker(id: str):
                     if (
                         registrant_detail.entitlement is not None
                         and benefit_code_id in registrant_detail.entitlement
-                        and registrant_detail.entitlement[benefit_code_id] == max_quantity
+                        and registrant_detail.entitlement[benefit_code_id]
+                        == max_quantity
                     ):
                         continue
-                    multiplier_value = multipliers.get(str(registrant_detail.registrant_id))
+                    multiplier_value = multipliers.get(
+                        str(registrant_detail.registrant_id)
+                    )
                     is_registrant_entitled = multiplier_value is not None
                     if not is_registrant_entitled:
                         multiplier_value = 0
@@ -224,5 +228,3 @@ def update_registrant_detail_json(
         registrant_detail.compute_elements[benefit_code_id][
             entitlement_rule_multiplier
         ] = multiplier_value
-
-
